@@ -9,31 +9,31 @@ import { Gnode } from '../gnode';
 interface Props extends PropsFromRedux {}
 
 const NodeManager: React.FC<Props> = (props: Props) => {
-    const [inputData, setInputData] = useState('');
+  const [inputData, setInputData] = useState('');
 
-    const onClickHandler = () => {
-        if (inputData) {
-            const newGnode = createGnode(parseInt(inputData));
-            props.addGnode(newGnode);
-        }
-    };
+  const onClickHandler = () => {
+    if (inputData) {
+      const newGnode = createGnode(parseInt(inputData));
+      props.addGnode(newGnode);
+    }
+  };
 
-    return (
-        <div>
-            <input type="text" onChange={(e) => setInputData(e.target.value)} />
-            <button onClick={onClickHandler}>NODE Manager</button>
-            {props.nodeManager.graph.nodes.map((node) => (
-                <Gnode gnode={node} key={node.id} />
-            ))}
-        </div>
-    );
+  return (
+    <div>
+      <input type="text" onChange={(e) => setInputData(e.target.value)} />
+      <button onClick={onClickHandler}>NODE Manager</button>
+      {props.nodeManager.graph.nodes.map((node) => (
+        <Gnode gnode={node} key={node.id} />
+      ))}
+    </div>
+  );
 };
 
 const mapStateToProps = (state: AppState) => ({
-    nodeManager: state.NodeManager,
+  nodeManager: state.NodeManager,
 });
 const mapDispatchToProps = {
-    addGnode: addGnode,
+  addGnode: addGnode,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

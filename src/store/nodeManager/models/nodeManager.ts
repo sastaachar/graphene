@@ -1,9 +1,9 @@
 import { IGnode } from '../../gnode/models';
 
 export interface IGraph {
-    nodes: IGnode[];
+  nodes: IGnode[];
 }
 
 export interface INodeManager {
-    graph: IGraph;
+  graph: IGraph;
 }
