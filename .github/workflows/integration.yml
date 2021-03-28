@@ -1,4 +1,4 @@
-name: Intergration Checks
+name: Continuous Intergration
 
 on:
   push:
@@ -20,5 +20,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run prettier:check
+      - name: Install dependencies and lint check
+        run: npm ci
+        run: npm run prettier:check
