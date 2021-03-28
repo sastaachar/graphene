@@ -21,7 +21,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
   return (
     <div>
       <input type="text" onChange={(e) => setInputData(e.target.value)} />
-      <button onClick={onClickHandler}>NODE Manager</button>
+      <button onClick={onClickHandler}>Node Manager</button>
       {props.nodeManager.graph.nodes.map((node) => (
         <Gnode gnode={node} key={node.id} />
       ))}
