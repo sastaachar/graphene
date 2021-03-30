@@ -5,13 +5,18 @@ export interface IGnode {
   data: number;
   visited: boolean;
   connections: number[];
+  pos: {
+    x: number;
+    y: number;
+  };
 }
 
-export const createGnode = (data: number): IGnode => {
+export const createGnode = (data: number, pos = { x: 0, y: 0 }): IGnode => {
   return {
     id: uuidv4(),
     data,
     visited: false,
     connections: [],
+    pos,
   };
 };
