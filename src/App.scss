@@ -1,0 +1,13 @@
+@import './variables';
+
+:root {
+  --primary: #{$primary};
+  --secondary: #{$secondary};
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  background-color: pink;
+  box-sizing: border-box;
+}
