@@ -6,6 +6,7 @@ import './gnode.scss';
 
 interface Props {
   gnode: IGnode;
+  onNodeSelect: (node: IGnode) => void;
 }
 
 export const Gnode: React.FC<Props> = (props: Props) => {
@@ -15,7 +16,7 @@ export const Gnode: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div className="gnode" style={style}>
+    <div className="gnode" style={style} onClick={() => props.onNodeSelect(props.gnode)}>
       <span className="gnode-content">{props.gnode.data}</span>
     </div>
   );

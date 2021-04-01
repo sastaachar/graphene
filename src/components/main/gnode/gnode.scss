@@ -6,6 +6,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
+  z-index: 3;
   &-content {
     position: relative;
     background-color: var(--secondary);

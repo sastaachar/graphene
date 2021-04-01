@@ -7,15 +7,18 @@
 
   .panel {
     position: relative;
-    border: 1px solid red;
     flex-basis: 20%;
+    overflow: auto;
   }
 
   .board {
     position: relative;
     background-color: saddlebrown;
-    border: 1px solid green;
     flex-basis: 80%;
-    overflow: scroll;
+    overflow: auto;
   }
+}
+
+svg {
+  position: absolute;
 }
