@@ -8,6 +8,7 @@ export interface IGraph {
   paths: {
     [key: string]: IPath;
   };
+  rootID?: string;
 }
 
 export interface INodeManager {

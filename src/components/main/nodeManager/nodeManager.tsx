@@ -2,7 +2,8 @@ import React, { MouseEvent, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { createGnode, IGnode } from '../../../store/gnode/models';
-import { addGnode, addPath } from '../../../store/nodeManager/nodeManagerActions';
+import { bfs } from '../../../store/nodeManager/algorithms/bfs';
+import { addGnode, addPath, setRoot, updateNode } from '../../../store/nodeManager/nodeManagerActions';
 import { createPath } from '../../../store/path/models';
 import { AppState } from '../../../store/rootStore';
 import { Gnode } from '../gnode';
@@ -32,7 +33,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
 
   const [sourceNode, setSourceNode] = useState<IGnode | null>(null);
 
-  const updateNodeSelection = (node: IGnode) => {
+  const updateNodePairs = (node: IGnode) => {
     if (panelState != 1) return;
     if (!sourceNode) {
       setSourceNode(node);
@@ -58,19 +59,38 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     setSourceNode(null);
   };
 
+  const updateNodeSelection = (node: IGnode) => {
+    // node is selected : do stuff to handle that
+    switch (panelState) {
+      case 1:
+        // update node pairs to create path
+        updateNodePairs(node);
+        break;
+      case 2:
+        // set node as root
+        props.setRoot(node.id);
+        break;
+      default:
+        break;
+    }
+  };
+
   // 0 -> create node
   // 1 -> create path
-
+  // 2 -> set Root
   return (
     <div className="nodemanager">
       <div className="panel">
         <input type="text" value={inputData} onChange={(e) => setInputData(e.target.value)} />
         <button onClick={() => setPanelState(0)}>create node</button>
         <button onClick={() => setPanelState(1)}>create path</button>
+        <button onClick={() => setPanelState(2)}>set root</button>
+        <button onClick={() => bfs(props.nodeManager.graph, props.updateNode)}>bfs</button>
       </div>
       <div className="board" onClick={createNodeOnClick} ref={boardRef}>
         {Object.values(props.nodeManager.graph.nodes).map((node) => (
-          <Gnode key={node.id} gnode={node} onNodeSelect={updateNodeSelection} />
+          //! FIX : need to pass updateNode here or typescript starts crying
+          <Gnode key={node.id} gnode={node} onNodeSelect={updateNodeSelection} updateNode={updateNode} />
         ))}
         {Object.values(props.nodeManager.graph.paths).map((path) => (
           <Path key={path.id} path={path} />
@@ -84,8 +104,10 @@ const mapStateToProps = (state: AppState) => ({
   nodeManager: state.NodeManager,
 });
 const mapDispatchToProps = {
-  addGnode: addGnode,
-  addPath: addPath,
+  addGnode,
+  addPath,
+  setRoot,
+  updateNode,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

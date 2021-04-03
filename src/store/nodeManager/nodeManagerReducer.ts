@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 
 import { INodeManager } from './models';
-import { ADD_NODE, ADD_PATH, NodeMangerAction } from './models/nodeManagerActionTypes';
+import { ADD_NODE, ADD_PATH, NodeMangerAction, SET_ROOT, UPDATE_NODE } from './models/nodeManagerActionTypes';
 
 const defaultState: INodeManager = {
   graph: {
@@ -31,7 +31,25 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
         ...oldConnections,
         { nodeID: newPath.destinationId, pathID: newPath.id },
       ];
-      console.log(newState);
+      return newState;
+
+    // might regret this later
+    case UPDATE_NODE:
+      const { updatedNode } = action.payload;
+      const previousNode = newState.graph.nodes[updatedNode.id];
+      if (!previousNode) {
+        return state;
+      }
+      // update the node
+      newState.graph.nodes[updatedNode.id] = { ...previousNode, ...updatedNode };
+      return newState;
+
+    case SET_ROOT:
+      const { nodeID } = action.payload;
+      if (!newState.graph.nodes[nodeID]) {
+        return state;
+      }
+      newState.graph.rootID = nodeID;
       return newState;
 
     default:
