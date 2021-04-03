@@ -1,17 +1,19 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Position } from '../../sharedModels';
 
+export interface Connection {
+  nodeID: string;
+  pathID: string;
+}
 export interface IGnode {
   id: string;
   data: number;
   visited: boolean;
-  connections: number[];
-  pos: {
-    x: number;
-    y: number;
-  };
+  connections: Connection[];
+  pos: Position;
 }
 
-export const createGnode = (data: number, pos = { x: 0, y: 0 }): IGnode => {
+export const createGnode = (data: number, pos: Position): IGnode => {
   return {
     id: uuidv4(),
     data,

@@ -1,7 +1,14 @@
+import { IPath } from '../../path/models';
 import { IGnode } from '../../gnode/models';
 
 export interface IGraph {
-  nodes: IGnode[];
+  nodes: {
+    [key: string]: IGnode;
+  };
+  paths: {
+    [key: string]: IPath;
+  };
+  rootID?: string;
 }
 
 export interface INodeManager {
