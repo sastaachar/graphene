@@ -2,8 +2,8 @@ import React, { MouseEvent, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { createGnode, IGnode } from '../../../store/gnode/models';
-import { bfs } from '../../../store/nodeManager/algorithms/bfs';
-import { addGnode, addPath, setRoot, updateNode } from '../../../store/nodeManager/nodeManagerActions';
+import { bfs, dfs } from '../../../store/nodeManager/algorithms';
+import { addGnode, addPath, setRoot, unvisitAll, updateNode } from '../../../store/nodeManager/nodeManagerActions';
 import { createPath } from '../../../store/path/models';
 import { AppState } from '../../../store/rootStore';
 import { Gnode } from '../gnode';
@@ -85,7 +85,9 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         <button onClick={() => setPanelState(0)}>create node</button>
         <button onClick={() => setPanelState(1)}>create path</button>
         <button onClick={() => setPanelState(2)}>set root</button>
+        <button onClick={() => props.unvisitAll()}>unvisit all</button>
         <button onClick={() => bfs(props.nodeManager.graph, props.updateNode)}>bfs</button>
+        <button onClick={() => dfs(props.nodeManager.graph, props.updateNode)}>dfs</button>
       </div>
       <div className="board" onClick={createNodeOnClick} ref={boardRef}>
         {Object.values(props.nodeManager.graph.nodes).map((node) => (
@@ -108,6 +110,7 @@ const mapDispatchToProps = {
   addPath,
   setRoot,
   updateNode,
+  unvisitAll,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

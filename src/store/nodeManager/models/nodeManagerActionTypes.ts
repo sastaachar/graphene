@@ -37,10 +37,16 @@ export interface SetRootAction {
   payload: { nodeID: string };
 }
 
+export const UNVISIT_ALL = 'UNVISIT_ALL';
+export interface UnvisitAllAction {
+  type: typeof UNVISIT_ALL;
+}
+
 export type NodeMangerAction =
   | AddGnodeAction
   | RemoveGnodeAction
   | AddPathAction
   | RemovePathAction
   | UpdateNodeAction
-  | SetRootAction;
+  | SetRootAction
+  | UnvisitAllAction;

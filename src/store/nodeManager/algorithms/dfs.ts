@@ -1,26 +1,26 @@
-import Queue from '../../../dataStructures/queue';
+import Stack from '../../../dataStructures/stack';
 import { IGnode } from '../../gnode/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction } from '../models/nodeManagerActionTypes';
 import { Visited, visitNode } from './helpers';
 
-const bfs = (graph: IGraph, updateNode: (x: IGnode) => UpdateNodeAction) => {
+const dfs = (graph: IGraph, updateNode: (x: IGnode) => UpdateNodeAction) => {
   if (!graph.rootID) {
     console.log('Root is not set');
     return;
   }
 
-  console.log('Starting BFS');
+  console.log('Starting DFS');
 
-  const q = new Queue<string>();
-  q.push(graph.rootID);
+  const s = new Stack<string>();
+  s.push(graph.rootID);
 
   const visited: Visited = {};
 
   let delay: number = 0;
 
-  while (!q.empty()) {
-    const curId = q.pop() as string;
+  while (!s.empty()) {
+    const curId = s.pop() as string;
     console.log(curId);
     const cur = graph.nodes[curId];
     visited[cur.id] = true;
@@ -32,11 +32,11 @@ const bfs = (graph: IGraph, updateNode: (x: IGnode) => UpdateNodeAction) => {
     delay += 300;
 
     graph.nodes[cur.id].connections.forEach((conn) => {
-      if (!visited[conn.nodeID]) q.push(conn.nodeID);
+      if (!visited[conn.nodeID]) s.push(conn.nodeID);
     });
   }
 
-  console.log('BFS finished');
+  console.log('DFS finished');
 };
 
-export default bfs;
+export default dfs;

@@ -1,7 +1,14 @@
 import { Reducer } from 'redux';
 
 import { INodeManager } from './models';
-import { ADD_NODE, ADD_PATH, NodeMangerAction, SET_ROOT, UPDATE_NODE } from './models/nodeManagerActionTypes';
+import {
+  ADD_NODE,
+  ADD_PATH,
+  NodeMangerAction,
+  SET_ROOT,
+  UNVISIT_ALL,
+  UPDATE_NODE,
+} from './models/nodeManagerActionTypes';
 
 const defaultState: INodeManager = {
   graph: {
@@ -50,6 +57,12 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
         return state;
       }
       newState.graph.rootID = nodeID;
+      return newState;
+
+    case UNVISIT_ALL:
+      Object.keys(newState.graph.nodes).forEach((nodeID) => {
+        newState.graph.nodes[nodeID].visited = false;
+      });
       return newState;
 
     default:

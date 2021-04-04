@@ -11,6 +11,8 @@ import {
   UPDATE_NODE,
   SetRootAction,
   SET_ROOT,
+  UnvisitAllAction,
+  UNVISIT_ALL,
 } from './models/nodeManagerActionTypes';
 
 export const addGnode = (gnode: IGnode): AddGnodeAction => ({
@@ -31,4 +33,8 @@ export const updateNode = (updatedNode: IGnode): UpdateNodeAction => ({
 export const setRoot = (nodeID: string): SetRootAction => ({
   type: SET_ROOT,
   payload: { nodeID },
+});
+
+export const unvisitAll = (): UnvisitAllAction => ({
+  type: UNVISIT_ALL,
 });
