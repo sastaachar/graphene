@@ -1,4 +1,4 @@
-import Stack from '../../../dataStructures/stack';
+import { Stack } from '../../../dataStructures';
 import { IGnode } from '../../gnode/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction } from '../models/nodeManagerActionTypes';

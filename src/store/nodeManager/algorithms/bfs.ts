@@ -1,4 +1,4 @@
-import Queue from '../../../dataStructures/queue';
+import { Queue } from '../../../dataStructures';
 import { IGnode } from '../../gnode/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction } from '../models/nodeManagerActionTypes';

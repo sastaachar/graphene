@@ -2,7 +2,7 @@ import React, { MouseEvent, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { createGnode, IGnode } from '../../../store/gnode/models';
-import { bfs, dfs } from '../../../store/nodeManager/algorithms';
+import { bfs, dfs, dijkstra } from '../../../store/nodeManager/algorithms';
 import { addGnode, addPath, setRoot, unvisitAll, updateNode } from '../../../store/nodeManager/nodeManagerActions';
 import { createPath } from '../../../store/path/models';
 import { AppState } from '../../../store/rootStore';
@@ -88,6 +88,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         <button onClick={() => props.unvisitAll()}>unvisit all</button>
         <button onClick={() => bfs(props.nodeManager.graph, props.updateNode)}>bfs</button>
         <button onClick={() => dfs(props.nodeManager.graph, props.updateNode)}>dfs</button>
+        <button onClick={() => dijkstra(props.nodeManager.graph, props.updateNode)}>dijkstra</button>
       </div>
       <div className="board" onClick={createNodeOnClick} ref={boardRef}>
         {Object.values(props.nodeManager.graph.nodes).map((node) => (
