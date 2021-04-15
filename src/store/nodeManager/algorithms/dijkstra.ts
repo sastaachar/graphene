@@ -26,7 +26,7 @@ interface Predecessor {
 const dijkstra = (
   graph: IGraph,
   updateNode: (x: IGnode) => UpdateNodeAction,
-  updatedPath: (x: IPath) => UpdatePathAction,
+  updatePath: (x: IPath) => UpdatePathAction,
 ) => {
   if (!graph.rootID) {
     console.log('Root is not set');
@@ -72,6 +72,7 @@ const dijkstra = (
     graph.nodes[cur.nodeID].connections.forEach((conn) => {
       const pathCost = graph.paths[conn.pathID].weight ?? 10;
       if (!visited[conn.nodeID] && costs[conn.nodeID] > cur.cost + pathCost) {
+        console.log('here');
         costs[conn.nodeID] = cur.cost + pathCost;
         q.push({ cost: costs[conn.nodeID], nodeID: conn.nodeID });
         pred[conn.nodeID] = { parentID: cur.nodeID, pathID: conn.pathID };
@@ -79,20 +80,33 @@ const dijkstra = (
     });
   }
 
+  console.log(pred);
+
   if (graph.destinationID) {
     // destination id is set so we can find path
 
+    // check if no path exists
+
     let prev: string | null = graph.destinationID;
+
     while (prev) {
       // update path
-      const tes: PrevState = pred[prev];
 
+      const connPath: PrevState = pred[prev];
+
+      if (!connPath) {
+        // prev was never visted
+        console.log("Can't reach ", prev);
+        break;
+      }
       setTimeout(() => {
-        updatedPath(visitPath(graph.paths[tes.pathID as string]));
+        if (connPath.pathID) updatePath(visitPath(graph.paths[connPath.pathID]));
+        // ! needs to be better
+        else console.log(connPath, ' ERROR pathID empty');
       }, delay);
 
       delay += 300;
-      prev = tes.parentID;
+      prev = connPath.parentID;
     }
   }
 
