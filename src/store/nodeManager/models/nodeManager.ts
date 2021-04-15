@@ -9,6 +9,7 @@ export interface IGraph {
     [key: string]: IPath;
   };
   rootID?: string;
+  destinationID?: string;
 }
 
 export interface INodeManager {

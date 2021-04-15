@@ -1,0 +1,24 @@
+.nodemanager {
+  width: 100%;
+  height: 100%;
+  background-color: var(--secondary);
+  display: flex;
+  flex-direction: row;
+
+  .left-panel {
+    position: relative;
+    flex-basis: 12%;
+    overflow: auto;
+  }
+
+  .right-panel {
+    position: relative;
+    background-color: var(--primary);
+    flex-basis: 88%;
+    overflow: auto;
+
+    .path {
+      position: absolute;
+    }
+  }
+}

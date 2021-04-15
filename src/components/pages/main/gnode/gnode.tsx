@@ -1,9 +1,9 @@
 import React, { CSSProperties } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-import { IGnode } from '../../../store/gnode/models';
+import { IGnode } from '../../../../store/gnode/models';
 
-import { updateNode } from '../../../store/nodeManager/nodeManagerActions';
+import { updateNode } from '../../../../store/nodeManager/nodeManagerActions';
 
 import './gnode.scss';
 
@@ -13,10 +13,13 @@ interface Props extends PropsFromRedux {
 }
 
 export const Gnode: React.FC<Props> = (props: Props) => {
+  const isSelected = props.gnode.state === 'selected';
+  const bgColor: string = isSelected ? 'var(--yellow)' : props.gnode.visited ? 'var(--green)' : 'var(--primary)';
+
   const style: CSSProperties = {
     left: props.gnode.pos.x,
     top: props.gnode.pos.y,
-    backgroundColor: props.gnode.visited ? 'green' : 'red',
+    backgroundColor: bgColor,
   };
 
   const handleOnClick = () => {
@@ -25,7 +28,9 @@ export const Gnode: React.FC<Props> = (props: Props) => {
 
   return (
     <div className="gnode" style={style} onClick={handleOnClick}>
-      <span className="gnode-content">{props.gnode.data}</span>
+      <div className="gnode-inner">
+        <span className="gnode-inner-content">{props.gnode.data}</span>
+      </div>
     </div>
   );
 };

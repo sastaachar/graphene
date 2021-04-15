@@ -37,10 +37,32 @@ export interface SetRootAction {
   payload: { nodeID: string };
 }
 
+export const UNVISIT_ALL = 'UNVISIT_ALL';
+export interface UnvisitAllAction {
+  type: typeof UNVISIT_ALL;
+}
+
+export const UPDATE_PATH = 'UPDATE_PATH';
+
+export interface UpdatePathAction {
+  type: typeof UPDATE_PATH;
+  payload: { updatedPath: IPath };
+}
+
+export const SET_DESTINATION = 'SET_DESTINATION';
+
+export interface SetDestinationAction {
+  type: typeof SET_DESTINATION;
+  payload: { nodeID: string };
+}
+
 export type NodeMangerAction =
   | AddGnodeAction
   | RemoveGnodeAction
   | AddPathAction
   | RemovePathAction
   | UpdateNodeAction
-  | SetRootAction;
+  | SetRootAction
+  | UnvisitAllAction
+  | UpdatePathAction
+  | SetDestinationAction;

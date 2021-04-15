@@ -11,10 +11,12 @@ export default class Queue<T> {
   }
 
   pop(): T | undefined {
+    // remove from front
     return this.queue.shift();
   }
 
   push(element: T) {
+    // add at rear
     this.queue.push(element);
   }
 

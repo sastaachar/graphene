@@ -2,7 +2,14 @@
 
 :root {
   --primary: #{$primary};
+  --primary-dark: #{$primary-dark};
+  --primary-darker: #{$primary-darker};
+
   --secondary: #{$secondary};
+
+  --green: #{$green};
+
+  --yellow: #{$yellow};
 }
 
 #root {

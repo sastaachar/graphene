@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { NodeManager } from './components/main/nodeManager';
+import { NodeManager } from './components/pages/main/nodeManager';
 
 import './App.scss';
 
