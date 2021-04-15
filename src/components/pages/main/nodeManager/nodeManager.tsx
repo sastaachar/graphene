@@ -43,7 +43,9 @@ const NodeManager: React.FC<Props> = (props: Props) => {
 
   const unselectSourceNode = () => {
     if (!sourceNode) return;
-    const selectedNode = sourceNode;
+    // we need to use the latest version to update
+    // TODO : use a property based update system
+    const selectedNode = props.nodeManager.graph.nodes[sourceNode.id];
     selectedNode.state = 'default';
     props.updateNode(selectedNode);
     setSourceNode(null);
