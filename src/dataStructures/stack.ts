@@ -3,7 +3,6 @@ export default class Stack<T> {
 
   constructor() {
     this.stack = [];
-    console.log('stack');
   }
 
   top(): T | undefined {
