@@ -98,8 +98,6 @@ const dijkstra = (
       }
       setTimeout(() => {
         if (connPath.pathID) updatePath(visitPath(graph.paths[connPath.pathID]));
-        // ! needs to be better
-        else console.log(connPath, ' ERROR pathID empty');
       }, delay);
 
       delay += 300;
