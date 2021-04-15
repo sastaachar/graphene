@@ -1,11 +1,19 @@
 import React, { MouseEvent, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-import { createGnode, IGnode } from '../../../store/gnode/models';
-import { bfs, dfs, dijkstra } from '../../../store/nodeManager/algorithms';
-import { addGnode, addPath, setRoot, unvisitAll, updateNode } from '../../../store/nodeManager/nodeManagerActions';
-import { createPath } from '../../../store/path/models';
-import { AppState } from '../../../store/rootStore';
+import { createGnode, IGnode } from '../../../../store/gnode/models';
+import { bfs, dfs, dijkstra } from '../../../../store/nodeManager/algorithms';
+import {
+  addGnode,
+  addPath,
+  setDestination,
+  setRoot,
+  unvisitAll,
+  updateNode,
+  updatePath,
+} from '../../../../store/nodeManager/nodeManagerActions';
+import { createPath } from '../../../../store/path/models';
+import { AppState } from '../../../../store/rootStore';
 import { Gnode } from '../gnode';
 import { Path } from '../path';
 
@@ -33,30 +41,49 @@ const NodeManager: React.FC<Props> = (props: Props) => {
 
   const [sourceNode, setSourceNode] = useState<IGnode | null>(null);
 
+  const unselectSourceNode = () => {
+    if (!sourceNode) return;
+    const selectedNode = sourceNode;
+    selectedNode.state = 'default';
+    props.updateNode(selectedNode);
+    setSourceNode(null);
+  };
   const updateNodePairs = (node: IGnode) => {
-    if (panelState != 1) return;
     if (!sourceNode) {
       setSourceNode(node);
+      node.state = 'selected';
+      props.updateNode(node);
       return;
     }
     // source is set
 
+    if (node.id === sourceNode.id) {
+      // no self loops for now
+      console.log('No self loops');
+      unselectSourceNode();
+      return;
+    }
+
     // check if path already exists
     const connections = props.nodeManager.graph.nodes[sourceNode.id].connections;
-    connections.forEach((conn) => {
+    for (let i = 0; i < connections.length; i++) {
+      const conn = connections[i];
       if (conn.nodeID === node.id) {
         // path already exists
-        setSourceNode(null);
+        console.log('Path already exists');
+        unselectSourceNode();
         return;
       }
-    });
+    }
+
+    const newPath = createPath(sourceNode, node);
+    props.addPath(newPath);
 
     // const newPath = createPath();
     // updateGnode  -> connections updated
     // updateGraph  -> adding path to paths
-    const newPath = createPath(sourceNode, node);
-    props.addPath(newPath);
-    setSourceNode(null);
+    unselectSourceNode();
+    return;
   };
 
   const updateNodeSelection = (node: IGnode) => {
@@ -70,6 +97,10 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         // set node as root
         props.setRoot(node.id);
         break;
+
+      case 3:
+        props.setDestination(node.id);
+        break;
       default:
         break;
     }
@@ -80,17 +111,18 @@ const NodeManager: React.FC<Props> = (props: Props) => {
   // 2 -> set Root
   return (
     <div className="nodemanager">
-      <div className="panel">
+      <div className="left-panel">
         <input type="text" value={inputData} onChange={(e) => setInputData(e.target.value)} />
         <button onClick={() => setPanelState(0)}>create node</button>
         <button onClick={() => setPanelState(1)}>create path</button>
         <button onClick={() => setPanelState(2)}>set root</button>
+        <button onClick={() => setPanelState(3)}>set destination</button>
         <button onClick={() => props.unvisitAll()}>unvisit all</button>
         <button onClick={() => bfs(props.nodeManager.graph, props.updateNode)}>bfs</button>
         <button onClick={() => dfs(props.nodeManager.graph, props.updateNode)}>dfs</button>
-        <button onClick={() => dijkstra(props.nodeManager.graph, props.updateNode)}>dijkstra</button>
+        <button onClick={() => dijkstra(props.nodeManager.graph, props.updateNode, props.updatePath)}>dijkstra</button>
       </div>
-      <div className="board" onClick={createNodeOnClick} ref={boardRef}>
+      <div className="right-panel" onClick={createNodeOnClick} ref={boardRef}>
         {Object.values(props.nodeManager.graph.nodes).map((node) => (
           //! FIX : need to pass updateNode here or typescript starts crying
           <Gnode key={node.id} gnode={node} onNodeSelect={updateNodeSelection} updateNode={updateNode} />
@@ -112,6 +144,8 @@ const mapDispatchToProps = {
   setRoot,
   updateNode,
   unvisitAll,
+  updatePath,
+  setDestination,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

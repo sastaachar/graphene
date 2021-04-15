@@ -1,8 +1,9 @@
 import { PriorityQueue } from '../../../dataStructures';
 import { IGnode } from '../../gnode/models';
+import { IPath } from '../../path/models';
 import { IGraph } from '../models';
-import { UpdateNodeAction } from '../models/nodeManagerActionTypes';
-import { Visited, visitNode } from './helpers';
+import { UpdateNodeAction, UpdatePathAction } from '../models/nodeManagerActionTypes';
+import { Visited, visitNode, visitPath } from './helpers';
 
 // there should be no negative weights
 
@@ -14,8 +15,19 @@ interface PathCost {
 interface Costs {
   [key: string]: number;
 }
+type PrevState = {
+  pathID: string | null;
+  parentID: string | null;
+};
+interface Predecessor {
+  [key: string]: PrevState;
+}
 
-const dijkstra = (graph: IGraph, updateNode: (x: IGnode) => UpdateNodeAction) => {
+const dijkstra = (
+  graph: IGraph,
+  updateNode: (x: IGnode) => UpdateNodeAction,
+  updatedPath: (x: IPath) => UpdatePathAction,
+) => {
   if (!graph.rootID) {
     console.log('Root is not set');
     return;
@@ -30,6 +42,10 @@ const dijkstra = (graph: IGraph, updateNode: (x: IGnode) => UpdateNodeAction) =>
   const costs: Costs = {};
   const visited: Visited = {};
   const q = new PriorityQueue<PathCost>(compare);
+
+  const pred: Predecessor = {};
+
+  pred[graph.rootID] = { pathID: null, parentID: null };
 
   Object.values(graph.nodes).forEach((node) => {
     costs[node.id] = Infinity;
@@ -58,8 +74,26 @@ const dijkstra = (graph: IGraph, updateNode: (x: IGnode) => UpdateNodeAction) =>
       if (!visited[conn.nodeID] && costs[conn.nodeID] > cur.cost + pathCost) {
         costs[conn.nodeID] = cur.cost + pathCost;
         q.push({ cost: costs[conn.nodeID], nodeID: conn.nodeID });
+        pred[conn.nodeID] = { parentID: cur.nodeID, pathID: conn.pathID };
       }
     });
+  }
+
+  if (graph.destinationID) {
+    // destination id is set so we can find path
+
+    let prev: string | null = graph.destinationID;
+    while (prev) {
+      // update path
+      const tes: PrevState = pred[prev];
+
+      setTimeout(() => {
+        updatedPath(visitPath(graph.paths[tes.pathID as string]));
+      }, delay);
+
+      delay += 300;
+      prev = tes.parentID;
+    }
   }
 
   console.log(costs);
