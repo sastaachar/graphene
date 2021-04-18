@@ -7,16 +7,25 @@
 
   .left-panel {
     position: relative;
-    flex-basis: 12%;
+    flex-basis: 15%;
+    min-width: 255px;
     overflow: auto;
+
+    &-selection {
+      color: var(--primary-dark);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      margin: 10px auto;
+    }
   }
 
   .right-panel {
     position: relative;
     background-color: var(--primary);
-    flex-basis: 88%;
+    flex-basis: 85%;
     overflow: auto;
-
     .path {
       position: absolute;
     }

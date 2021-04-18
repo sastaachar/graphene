@@ -14,6 +14,7 @@ import {
 } from '../../../../store/nodeManager/nodeManagerActions';
 import { createPath } from '../../../../store/path/models';
 import { AppState } from '../../../../store/rootStore';
+import { SelectSearch } from '../../../shared/select-search';
 import { Gnode } from '../gnode';
 import { Path } from '../path';
 
@@ -111,10 +112,26 @@ const NodeManager: React.FC<Props> = (props: Props) => {
   // 0 -> create node
   // 1 -> create path
   // 2 -> set Root
+  const options = [
+    { key: 0, value: 'Create Node' },
+    { key: 1, value: 'Create Path' },
+    { key: 2, value: 'Set Root' },
+    { key: 3, value: 'Set Destination' },
+  ];
+
   return (
     <div className="nodemanager">
       <div className="left-panel">
         <input type="text" value={inputData} onChange={(e) => setInputData(e.target.value)} />
+        <div className="left-panel-selection">
+          <span>mode :</span>
+          <SelectSearch options={options} defaultSlectText="Select Mode" defaultSelectKey={0}></SelectSearch>
+        </div>
+        <div className="left-panel-selection">
+          <span>mode :</span>
+          <SelectSearch options={options} defaultSlectText="Select Mode" defaultSelectKey={0}></SelectSearch>
+        </div>
+
         <button onClick={() => setPanelState(0)}>create node</button>
         <button onClick={() => setPanelState(1)}>create path</button>
         <button onClick={() => setPanelState(2)}>set root</button>
