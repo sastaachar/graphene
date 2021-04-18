@@ -9,8 +9,9 @@ interface Option {
 
 interface SelectSearchProps {
   defaultSlectText: string;
-  defaultSelectKey?: string | number;
   options: Option[];
+  defaultSelectKey?: string | number;
+  setOptionState?: Function;
 }
 
 const SearchIcon = () => {
@@ -26,7 +27,7 @@ const SearchIcon = () => {
 
 const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => {
   const [searchText, setsearchText] = useState('');
-  const [selectedOption, setSelectedOption] = useState<string>();
+  const [selectedOption, setSelectedOption] = useState<Option>();
   const [showBar, setShowBar] = useState<boolean>(false);
   const inputBar = createRef<HTMLInputElement>();
 
@@ -44,13 +45,16 @@ const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => 
       });
 
       if (defalutSelection.length > 0) {
-        setSelectedOption(defalutSelection[0].value);
+        setSelectedOption(defalutSelection[0]);
       }
     }
   }, []);
   useEffect(() => {
     if (showBar) inputBar.current?.focus();
   }, [showBar]);
+  useEffect(() => {
+    if (props.setOptionState) props.setOptionState(selectedOption?.key);
+  }, [selectedOption]);
 
   const searchFilter = (ele: Option) => {
     if (ele.value.toLocaleLowerCase().includes(searchText.toLocaleLowerCase())) return ele;
@@ -64,7 +68,7 @@ const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => 
     <div className={'select-search'} ref={searchBar} onClick={handleToggleShow}>
       <div className={'select-search-selected' + (showBar ? ' two-rounded' : ' all-rounded')}>
         <div className="select-search-selected-value">
-          <span>{selectedOption || props.defaultSlectText}</span>
+          <span>{selectedOption?.value || props.defaultSlectText}</span>
         </div>
         <div className={'select-search-selected-button' + (showBar ? ' down-arrow' : ' left-arrow')}></div>
       </div>
@@ -77,7 +81,7 @@ const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => 
             <input type="text" onChange={(e) => setsearchText(e.target.value)} ref={inputBar} value={searchText} />
           </div>
           {props.options.filter(searchFilter).map((option) => (
-            <div key={option.key} className="select-search-option" onClick={() => setSelectedOption(option.value)}>
+            <div key={option.key} className="select-search-option" onClick={() => setSelectedOption(option)}>
               <span>{option.value}</span>
             </div>
           ))}
@@ -88,7 +92,7 @@ const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => 
 };
 
 // arrow function gives error and i dont want to use the work around
-function useOutsideClick<any>(ref: RefObject<any>, cb: any): void {
+function useOutsideClick(ref: RefObject<any>, cb: any): void {
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (ref.current?.contains && !ref.current.contains(event.target)) {
