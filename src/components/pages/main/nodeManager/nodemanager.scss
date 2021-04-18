@@ -1,24 +1,59 @@
 .nodemanager {
   width: 100%;
   height: 100%;
+
   background-color: var(--secondary);
   display: flex;
   flex-direction: row;
 
   .left-panel {
     position: relative;
-    flex-basis: 12%;
+    flex-basis: 15%;
+    min-width: 300px;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-start {
+      margin-top: 20px;
+      background-color: var(--green);
+    }
+
+    &-selection {
+      color: var(--primary-dark);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0px 10px;
+      margin: 10px auto;
+    }
   }
 
   .right-panel {
     position: relative;
     background-color: var(--primary);
-    flex-basis: 88%;
+    flex-basis: 85%;
     overflow: auto;
-
     .path {
       position: absolute;
     }
   }
+}
+
+.small-box {
+  height: 36px;
+  width: 120px;
+  border-radius: 5px;
+  font-size: 18px;
+
+  color: var(--primary-dark);
+  font-family: inherit;
+  border: none;
+  outline: none;
+  text-align: center;
+  margin: 10px;
+  padding: none;
+  box-shadow: -2px -2px 12px rgba(255, 255, 255, 0.25), 5px 4px 5px rgba(0, 0, 0, 0.25);
 }

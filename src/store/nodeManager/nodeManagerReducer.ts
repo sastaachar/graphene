@@ -76,6 +76,9 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
       Object.keys(newState.graph.nodes).forEach((nodeID) => {
         newState.graph.nodes[nodeID].visited = false;
       });
+      Object.keys(newState.graph.paths).forEach((pathID) => {
+        newState.graph.paths[pathID].state = 'default';
+      });
       return newState;
     }
     case SET_DESTINATION: {

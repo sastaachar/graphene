@@ -14,20 +14,24 @@ import {
 } from '../../../../store/nodeManager/nodeManagerActions';
 import { createPath } from '../../../../store/path/models';
 import { AppState } from '../../../../store/rootStore';
+import { SelectSearch } from '../../../shared/select-search';
 import { Gnode } from '../gnode';
 import { Path } from '../path';
 
-import './nodemanager.scss';
+import './nodeManager.scss';
 
 interface Props extends PropsFromRedux {}
 
 const NodeManager: React.FC<Props> = (props: Props) => {
   const [inputData, setInputData] = useState('');
-  const [panelState, setPanelState] = useState(0);
+
   const boardRef = useRef<HTMLDivElement>(null);
 
+  const [modeState, setModeState] = useState(0);
+  const [algorithmState, setAlgorithmState] = useState(0);
+
   const createNodeOnClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (panelState != 0) return;
+    if (modeState != 0) return;
     if (inputData) {
       const nodeValue = parseInt(inputData);
       if (!nodeValue) return;
@@ -88,9 +92,16 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     return;
   };
 
-  const updateNodeSelection = (node: IGnode) => {
+  const optionsMode = [
+    { key: 0, value: 'Create Node' },
+    { key: 1, value: 'Create Path' },
+    { key: 2, value: 'Set Root' },
+    { key: 3, value: 'Set Destination' },
+  ];
+
+  const updateModeSelection = (node: IGnode) => {
     // node is selected : do stuff to handle that
-    switch (panelState) {
+    switch (modeState) {
       case 1:
         // update node pairs to create path
         updateNodePairs(node);
@@ -108,26 +119,71 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     }
   };
 
-  // 0 -> create node
-  // 1 -> create path
-  // 2 -> set Root
+  const optionsAlgorithm = [
+    { key: 0, value: 'BFS' },
+    { key: 1, value: 'DFS' },
+    { key: 2, value: 'Dijkstra' },
+  ];
+
+  const updateAlgoSelection = () => {
+    switch (algorithmState) {
+      case 0:
+        bfs(props.nodeManager.graph, props.updateNode);
+        break;
+
+      case 1:
+        dfs(props.nodeManager.graph, props.updateNode);
+        break;
+
+      case 2:
+        dijkstra(props.nodeManager.graph, props.updateNode, props.updatePath);
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <div className="nodemanager">
       <div className="left-panel">
-        <input type="text" value={inputData} onChange={(e) => setInputData(e.target.value)} />
-        <button onClick={() => setPanelState(0)}>create node</button>
-        <button onClick={() => setPanelState(1)}>create path</button>
-        <button onClick={() => setPanelState(2)}>set root</button>
-        <button onClick={() => setPanelState(3)}>set destination</button>
-        <button onClick={() => props.unvisitAll()}>unvisit all</button>
-        <button onClick={() => bfs(props.nodeManager.graph, props.updateNode)}>bfs</button>
-        <button onClick={() => dfs(props.nodeManager.graph, props.updateNode)}>dfs</button>
-        <button onClick={() => dijkstra(props.nodeManager.graph, props.updateNode, props.updatePath)}>dijkstra</button>
+        <input
+          type="text"
+          className="left-panel-input small-box"
+          value={inputData}
+          onChange={(e) => setInputData(e.target.value)}
+        />
+        <div className="left-panel-selection">
+          <span>mode :</span>
+          <SelectSearch
+            options={optionsMode}
+            defaultSlectText="Select Mode"
+            defaultSelectKey={0}
+            setOptionState={setModeState}
+          ></SelectSearch>
+        </div>
+        <div className="left-panel-selection">
+          <span>algorithm :</span>
+          <SelectSearch
+            options={optionsAlgorithm}
+            defaultSlectText="Select Mode"
+            defaultSelectKey={0}
+            setOptionState={setAlgorithmState}
+          ></SelectSearch>
+        </div>
+
+        <button className="left-panel-start small-box" onClick={updateAlgoSelection}>
+          start
+        </button>
+
+        <button className="small-box" onClick={() => props.unvisitAll()}>
+          unvisit all
+        </button>
       </div>
       <div className="right-panel" onClick={createNodeOnClick} ref={boardRef}>
         {Object.values(props.nodeManager.graph.nodes).map((node) => (
           //! FIX : need to pass updateNode here or typescript starts crying
-          <Gnode key={node.id} gnode={node} onNodeSelect={updateNodeSelection} updateNode={updateNode} />
+          <Gnode key={node.id} gnode={node} onNodeSelect={updateModeSelection} updateNode={updateNode} />
         ))}
         {Object.values(props.nodeManager.graph.paths).map((path) => (
           <Path key={path.id} path={path} />

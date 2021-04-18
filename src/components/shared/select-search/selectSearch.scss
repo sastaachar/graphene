@@ -1,0 +1,83 @@
+.select-search {
+  font-family: inherit;
+  cursor: pointer;
+
+  color: var(--yellow);
+  &-selected {
+    height: 36px;
+    width: 151px;
+    border-radius: 5px;
+    background-color: var(--primary-dark);
+
+    position: relative;
+
+    box-shadow: -2px -2px 12px rgba(255, 255, 255, 0.25), 5px 4px 5px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+
+    &-button {
+      // code to make a triangle
+      cursor: pointer;
+      width: 0;
+      height: 0;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-right: 10px solid var(--green);
+      transition: all 0.4s ease-out;
+    }
+  }
+
+  &-bar {
+    position: absolute;
+    z-index: 1;
+
+    .input-box {
+      height: 36px;
+      width: 151px;
+      border: 2px solid var(--primary-dark);
+      background-color: var(--primary);
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      span {
+        margin: 0px 3px;
+      }
+      input {
+        font-family: inherit;
+        color: var(--primary-darker);
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        outline: none;
+        border: none;
+      }
+    }
+  }
+
+  &-option {
+    height: 36px;
+    width: 151px;
+    color: var(--primary-darker);
+    display: grid;
+    place-items: center;
+    background-color: var(--primary);
+  }
+
+  &-option:hover {
+    background-color: var(--yellow);
+  }
+}
+
+.left-arrow {
+  transform: rotate(0deg);
+}
+
+.down-arrow {
+  transform: rotate(-90deg);
+}
+
+.two-rounded {
+  border-radius: 5px 5px 0px 0px;
+}

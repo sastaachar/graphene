@@ -72,15 +72,12 @@ const dijkstra = (
     graph.nodes[cur.nodeID].connections.forEach((conn) => {
       const pathCost = graph.paths[conn.pathID].weight ?? 10;
       if (!visited[conn.nodeID] && costs[conn.nodeID] > cur.cost + pathCost) {
-        console.log('here');
         costs[conn.nodeID] = cur.cost + pathCost;
         q.push({ cost: costs[conn.nodeID], nodeID: conn.nodeID });
         pred[conn.nodeID] = { parentID: cur.nodeID, pathID: conn.pathID };
       }
     });
   }
-
-  console.log(pred);
 
   if (graph.destinationID) {
     // destination id is set so we can find path
@@ -101,8 +98,6 @@ const dijkstra = (
       }
       setTimeout(() => {
         if (connPath.pathID) updatePath(visitPath(graph.paths[connPath.pathID]));
-        // ! needs to be better
-        else console.log(connPath, ' ERROR pathID empty');
       }, delay);
 
       delay += 300;
