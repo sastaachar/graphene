@@ -149,7 +149,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
       <div className="left-panel">
         <input
           type="text"
-          className="left-panel-input"
+          className="left-panel-input small-box"
           value={inputData}
           onChange={(e) => setInputData(e.target.value)}
         />
@@ -172,9 +172,13 @@ const NodeManager: React.FC<Props> = (props: Props) => {
           ></SelectSearch>
         </div>
 
-        <button onClick={updateAlgoSelection}>start</button>
+        <button className="left-panel-start small-box" onClick={updateAlgoSelection}>
+          start
+        </button>
 
-        <button onClick={() => props.unvisitAll()}>unvisit all</button>
+        <button className="small-box" onClick={() => props.unvisitAll()}>
+          unvisit all
+        </button>
       </div>
       <div className="right-panel" onClick={createNodeOnClick} ref={boardRef}>
         {Object.values(props.nodeManager.graph.nodes).map((node) => (
