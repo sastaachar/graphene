@@ -14,12 +14,12 @@ interface Props extends PropsFromRedux {
 
 export const Gnode: React.FC<Props> = (props: Props) => {
   const isSelected = props.gnode.state === 'selected';
-  const bgColor: string = isSelected ? 'var(--yellow)' : props.gnode.visited ? 'var(--green)' : 'var(--primary)';
+  let className = 'gnode';
+  className += isSelected ? ' gnode--selected' : props.gnode.visited ? ' gnode--visited' : '';
 
   const style: CSSProperties = {
     left: props.gnode.pos.x,
     top: props.gnode.pos.y,
-    backgroundColor: bgColor,
   };
 
   const handleOnClick = () => {
@@ -27,7 +27,7 @@ export const Gnode: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div className="gnode" style={style} onClick={handleOnClick}>
+    <div className={className} style={style} onClick={handleOnClick}>
       <div className="gnode-inner">
         <span className="gnode-inner-content">{props.gnode.data}</span>
       </div>

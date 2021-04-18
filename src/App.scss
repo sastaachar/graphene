@@ -1,4 +1,5 @@
 @import './variables';
+@import url('https://fonts.googleapis.com/css2?family=Finger+Paint&display=swap');
 
 :root {
   --primary: #{$primary};
@@ -17,4 +18,5 @@
   height: 100vh;
   background-color: pink;
   box-sizing: border-box;
+  font-family: 'Finger Paint', cursive;
 }
