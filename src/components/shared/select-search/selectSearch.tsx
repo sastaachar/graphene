@@ -28,6 +28,7 @@ const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => 
   const [searchText, setsearchText] = useState('');
   const [selectedOption, setSelectedOption] = useState<string>();
   const [showBar, setShowBar] = useState<boolean>(false);
+  const inputBar = createRef<HTMLInputElement>();
 
   const handleOutsideClick = () => {
     if (showBar) setShowBar(false);
@@ -47,13 +48,20 @@ const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => 
       }
     }
   }, []);
+  useEffect(() => {
+    if (showBar) inputBar.current?.focus();
+  }, [showBar]);
 
   const searchFilter = (ele: Option) => {
     if (ele.value.toLocaleLowerCase().includes(searchText.toLocaleLowerCase())) return ele;
   };
 
+  const handleToggleShow = () => {
+    setShowBar(!showBar);
+  };
+
   return (
-    <div className={'select-search'} ref={searchBar} onClick={() => setShowBar(!showBar)}>
+    <div className={'select-search'} ref={searchBar} onClick={handleToggleShow}>
       <div className={'select-search-selected' + (showBar ? ' two-rounded' : ' all-rounded')}>
         <div className="select-search-selected-value">
           <span>{selectedOption || props.defaultSlectText}</span>
@@ -66,7 +74,7 @@ const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => 
             <span>
               <SearchIcon />
             </span>
-            <input type="text" onChange={(e) => setsearchText(e.target.value)} value={searchText} />
+            <input type="text" onChange={(e) => setsearchText(e.target.value)} ref={inputBar} value={searchText} />
           </div>
           {props.options.filter(searchFilter).map((option) => (
             <div key={option.key} className="select-search-option" onClick={() => setSelectedOption(option.value)}>
