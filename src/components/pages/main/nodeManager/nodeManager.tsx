@@ -92,7 +92,14 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     return;
   };
 
-  const updateNodeSelection = (node: IGnode) => {
+  const optionsMode = [
+    { key: 0, value: 'Create Node' },
+    { key: 1, value: 'Create Path' },
+    { key: 2, value: 'Set Root' },
+    { key: 3, value: 'Set Destination' },
+  ];
+
+  const updateModeSelection = (node: IGnode) => {
     // node is selected : do stuff to handle that
     switch (modeState) {
       case 1:
@@ -112,21 +119,30 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     }
   };
 
-  // 0 -> create node
-  // 1 -> create path
-  // 2 -> set Root
-  const optionsMode = [
-    { key: 0, value: 'Create Node' },
-    { key: 1, value: 'Create Path' },
-    { key: 2, value: 'Set Root' },
-    { key: 3, value: 'Set Destination' },
-  ];
-
   const optionsAlgorithm = [
     { key: 0, value: 'BFS' },
     { key: 1, value: 'DFS' },
     { key: 2, value: 'Dijkstra' },
   ];
+
+  const updateAlgoSelection = () => {
+    switch (algorithmState) {
+      case 0:
+        bfs(props.nodeManager.graph, props.updateNode);
+        break;
+
+      case 1:
+        dfs(props.nodeManager.graph, props.updateNode);
+        break;
+
+      case 2:
+        dijkstra(props.nodeManager.graph, props.updateNode, props.updatePath);
+        break;
+
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="nodemanager">
@@ -148,18 +164,22 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         </div>
         <div className="left-panel-selection">
           <span>algorithm :</span>
-          <SelectSearch options={optionsAlgorithm} defaultSlectText="Select Mode" defaultSelectKey={0}></SelectSearch>
+          <SelectSearch
+            options={optionsAlgorithm}
+            defaultSlectText="Select Mode"
+            defaultSelectKey={0}
+            setOptionState={setAlgorithmState}
+          ></SelectSearch>
         </div>
 
+        <button onClick={updateAlgoSelection}>start</button>
+
         <button onClick={() => props.unvisitAll()}>unvisit all</button>
-        <button onClick={() => bfs(props.nodeManager.graph, props.updateNode)}>bfs</button>
-        <button onClick={() => dfs(props.nodeManager.graph, props.updateNode)}>dfs</button>
-        <button onClick={() => dijkstra(props.nodeManager.graph, props.updateNode, props.updatePath)}>dijkstra</button>
       </div>
       <div className="right-panel" onClick={createNodeOnClick} ref={boardRef}>
         {Object.values(props.nodeManager.graph.nodes).map((node) => (
           //! FIX : need to pass updateNode here or typescript starts crying
-          <Gnode key={node.id} gnode={node} onNodeSelect={updateNodeSelection} updateNode={updateNode} />
+          <Gnode key={node.id} gnode={node} onNodeSelect={updateModeSelection} updateNode={updateNode} />
         ))}
         {Object.values(props.nodeManager.graph.paths).map((path) => (
           <Path key={path.id} path={path} />
