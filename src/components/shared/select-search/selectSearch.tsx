@@ -1,4 +1,4 @@
-import React, { createRef, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
+import React, { createRef, RefObject, useEffect, useState } from 'react';
 
 import './selectSearch.scss';
 
