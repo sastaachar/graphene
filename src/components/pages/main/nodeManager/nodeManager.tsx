@@ -18,17 +18,20 @@ import { SelectSearch } from '../../../shared/select-search';
 import { Gnode } from '../gnode';
 import { Path } from '../path';
 
-import './nodemanager.scss';
+import './nodeManager.scss';
 
 interface Props extends PropsFromRedux {}
 
 const NodeManager: React.FC<Props> = (props: Props) => {
   const [inputData, setInputData] = useState('');
-  const [panelState, setPanelState] = useState(0);
+
   const boardRef = useRef<HTMLDivElement>(null);
 
+  const [modeState, setModeState] = useState(0);
+  const [algorithmState, setAlgorithmState] = useState(0);
+
   const createNodeOnClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (panelState != 0) return;
+    if (modeState != 0) return;
     if (inputData) {
       const nodeValue = parseInt(inputData);
       if (!nodeValue) return;
@@ -91,7 +94,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
 
   const updateNodeSelection = (node: IGnode) => {
     // node is selected : do stuff to handle that
-    switch (panelState) {
+    switch (modeState) {
       case 1:
         // update node pairs to create path
         updateNodePairs(node);
@@ -112,30 +115,42 @@ const NodeManager: React.FC<Props> = (props: Props) => {
   // 0 -> create node
   // 1 -> create path
   // 2 -> set Root
-  const options = [
+  const optionsMode = [
     { key: 0, value: 'Create Node' },
     { key: 1, value: 'Create Path' },
     { key: 2, value: 'Set Root' },
     { key: 3, value: 'Set Destination' },
   ];
 
+  const optionsAlgorithm = [
+    { key: 0, value: 'BFS' },
+    { key: 1, value: 'DFS' },
+    { key: 2, value: 'Dijkstra' },
+  ];
+
   return (
     <div className="nodemanager">
       <div className="left-panel">
-        <input type="text" value={inputData} onChange={(e) => setInputData(e.target.value)} />
+        <input
+          type="text"
+          className="left-panel-input"
+          value={inputData}
+          onChange={(e) => setInputData(e.target.value)}
+        />
         <div className="left-panel-selection">
           <span>mode :</span>
-          <SelectSearch options={options} defaultSlectText="Select Mode" defaultSelectKey={0}></SelectSearch>
+          <SelectSearch
+            options={optionsMode}
+            defaultSlectText="Select Mode"
+            defaultSelectKey={0}
+            setOptionState={setModeState}
+          ></SelectSearch>
         </div>
         <div className="left-panel-selection">
-          <span>mode :</span>
-          <SelectSearch options={options} defaultSlectText="Select Mode" defaultSelectKey={0}></SelectSearch>
+          <span>algorithm :</span>
+          <SelectSearch options={optionsAlgorithm} defaultSlectText="Select Mode" defaultSelectKey={0}></SelectSearch>
         </div>
 
-        <button onClick={() => setPanelState(0)}>create node</button>
-        <button onClick={() => setPanelState(1)}>create path</button>
-        <button onClick={() => setPanelState(2)}>set root</button>
-        <button onClick={() => setPanelState(3)}>set destination</button>
         <button onClick={() => props.unvisitAll()}>unvisit all</button>
         <button onClick={() => bfs(props.nodeManager.graph, props.updateNode)}>bfs</button>
         <button onClick={() => dfs(props.nodeManager.graph, props.updateNode)}>dfs</button>
