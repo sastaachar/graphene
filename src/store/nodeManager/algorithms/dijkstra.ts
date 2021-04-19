@@ -3,7 +3,7 @@ import { IGnode } from '../../gnode/models';
 import { IPath } from '../../path/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction, UpdatePathAction } from '../models/nodeManagerActionTypes';
-import { Visited, visitNode, visitPath } from './helpers';
+import { touchNode, Visited, visitNode, visitPath } from './helpers';
 
 // there should be no negative weights
 
@@ -69,11 +69,17 @@ const dijkstra = (
 
     delay += 300;
 
+    // if destination is set - break preemptively
+    if (graph.destinationID === cur.nodeID) break;
+
     graph.nodes[cur.nodeID].connections.forEach((conn) => {
       const pathCost = graph.paths[conn.pathID].weight ?? 10;
       if (!visited[conn.nodeID] && costs[conn.nodeID] > cur.cost + pathCost) {
         costs[conn.nodeID] = cur.cost + pathCost;
         q.push({ cost: costs[conn.nodeID], nodeID: conn.nodeID });
+        setTimeout(() => {
+          updateNode(touchNode(curNode));
+        }, delay);
         pred[conn.nodeID] = { parentID: cur.nodeID, pathID: conn.pathID };
       }
     });

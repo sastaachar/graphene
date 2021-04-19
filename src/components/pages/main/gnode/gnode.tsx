@@ -13,9 +13,16 @@ interface Props extends PropsFromRedux {
 }
 
 export const Gnode: React.FC<Props> = (props: Props) => {
-  const isSelected = props.gnode.state === 'selected';
+  const isSelected = props.gnode.state === 'selected',
+    isTouched = props.gnode.state === 'touched';
   let className = 'gnode';
-  className += isSelected ? ' gnode--selected' : props.gnode.visited ? ' gnode--visited' : '';
+  className += isSelected
+    ? ' gnode--selected'
+    : props.gnode.visited
+    ? ' gnode--visited'
+    : isTouched
+    ? ' gnode--touched'
+    : '';
 
   const style: CSSProperties = {
     left: props.gnode.pos.x,
