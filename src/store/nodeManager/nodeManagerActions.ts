@@ -34,7 +34,7 @@ export const updateNode = (updatedNode: IGnode): UpdateNodeAction => ({
   payload: { updatedNode },
 });
 
-export const setRoot = (nodeID: string): SetRootAction => ({
+export const setRoot = (nodeID: string | undefined): SetRootAction => ({
   type: SET_ROOT,
   payload: { nodeID },
 });
@@ -48,7 +48,7 @@ export const updatePath = (updatedPath: IPath): UpdatePathAction => ({
   payload: { updatedPath },
 });
 
-export const setDestination = (nodeID: string): SetDestinationAction => ({
+export const setDestination = (nodeID: string | undefined): SetDestinationAction => ({
   type: SET_DESTINATION,
   payload: { nodeID },
 });

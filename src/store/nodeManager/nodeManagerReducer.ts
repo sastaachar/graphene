@@ -66,9 +66,7 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
     }
     case SET_ROOT: {
       const { nodeID } = action.payload;
-      if (!newState.graph.nodes[nodeID]) {
-        return state;
-      }
+
       newState.graph.rootID = nodeID;
       return newState;
     }
@@ -84,9 +82,7 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
     }
     case SET_DESTINATION: {
       const { nodeID } = action.payload;
-      if (!newState.graph.nodes[nodeID]) {
-        return state;
-      }
+
       newState.graph.destinationID = nodeID;
       return newState;
     }

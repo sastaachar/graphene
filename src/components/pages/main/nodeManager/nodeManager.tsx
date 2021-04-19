@@ -23,6 +23,7 @@ import './nodeManager.scss';
 interface Props extends PropsFromRedux {}
 
 const NodeManager: React.FC<Props> = (props: Props) => {
+  // for node data input
   const [inputData, setInputData] = useState('');
 
   const boardRef = useRef<HTMLDivElement>(null);
@@ -33,8 +34,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
   const createNodeOnClick = (e: MouseEvent<HTMLDivElement>) => {
     if (modeState != 0) return;
     if (inputData) {
-      const nodeValue = parseInt(inputData);
-      if (!nodeValue) return;
+      const nodeValue = parseInt(inputData) || inputData;
       const newGnode = createGnode(nodeValue, {
         x: e.pageX - (boardRef.current?.offsetLeft ?? 0) - 50 + (boardRef.current?.scrollLeft ?? 0),
         y: e.pageY - (boardRef.current?.offsetTop ?? 0) - 50 + (boardRef.current?.scrollTop ?? 0),
@@ -108,11 +108,14 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         break;
       case 2:
         // set node as root
-        props.setRoot(node.id);
+        if (props.nodeManager.graph.rootID !== node.id) props.setRoot(node.id);
+        else props.setRoot(undefined);
+
         break;
 
       case 3:
-        props.setDestination(node.id);
+        if (props.nodeManager.graph.destinationID !== node.id) props.setDestination(node.id);
+        else props.setDestination(undefined);
         break;
       default:
         break;
@@ -183,7 +186,14 @@ const NodeManager: React.FC<Props> = (props: Props) => {
       <div className="right-panel" onClick={createNodeOnClick} ref={boardRef}>
         {Object.values(props.nodeManager.graph.nodes).map((node) => (
           //! FIX : need to pass updateNode here or typescript starts crying
-          <Gnode key={node.id} gnode={node} onNodeSelect={updateModeSelection} updateNode={updateNode} />
+          <Gnode
+            key={node.id}
+            gnode={node}
+            onNodeSelect={updateModeSelection}
+            updateNode={updateNode}
+            isRoot={node.id === props.nodeManager.graph.rootID}
+            isDestination={node.id === props.nodeManager.graph.destinationID}
+          />
         ))}
         {Object.values(props.nodeManager.graph.paths).map((path) => (
           <Path key={path.id} path={path} />
