@@ -75,6 +75,7 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
     case UNVISIT_ALL: {
       Object.keys(newState.graph.nodes).forEach((nodeID) => {
         newState.graph.nodes[nodeID].visited = false;
+        newState.graph.nodes[nodeID].state = 'default';
       });
       Object.keys(newState.graph.paths).forEach((pathID) => {
         newState.graph.paths[pathID].state = 'default';

@@ -16,3 +16,9 @@ export const visitPath = (path: IPath) => {
   newPath.state = 'travel';
   return newPath;
 };
+
+export const touchNode = (node: IGnode) => {
+  const newNode = { ...node };
+  newNode.state = 'touched';
+  return newNode;
+};

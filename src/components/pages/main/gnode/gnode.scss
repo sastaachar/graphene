@@ -32,4 +32,9 @@
     background-color: var(--green);
     transition: background-color 0s;
   }
+
+  &--touched {
+    background-color: var(--yellow);
+    transition: background-color 0s;
+  }
 }
