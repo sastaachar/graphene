@@ -14,6 +14,7 @@ import {
 } from '../../../../store/nodeManager/nodeManagerActions';
 import { createPath } from '../../../../store/path/models';
 import { AppState } from '../../../../store/rootStore';
+import { Checkbox } from '../../../shared/checkbox';
 import { SelectSearch } from '../../../shared/select-search';
 import { Gnode } from '../gnode';
 import { Path } from '../path';
@@ -30,20 +31,23 @@ const NodeManager: React.FC<Props> = (props: Props) => {
 
   const [modeState, setModeState] = useState(0);
   const [algorithmState, setAlgorithmState] = useState(0);
-
+  const [sourceNode, setSourceNode] = useState<IGnode | null>(null);
+  const [autoIncrement, setAutoIncrement] = useState(false);
   const createNodeOnClick = (e: MouseEvent<HTMLDivElement>) => {
     if (modeState != 0) return;
     if (inputData) {
-      const nodeValue = parseInt(inputData) || inputData;
+      const intValue = parseInt(inputData);
+      const nodeValue = intValue || inputData;
       const newGnode = createGnode(nodeValue, {
         x: e.pageX - (boardRef.current?.offsetLeft ?? 0) - 50 + (boardRef.current?.scrollLeft ?? 0),
         y: e.pageY - (boardRef.current?.offsetTop ?? 0) - 50 + (boardRef.current?.scrollTop ?? 0),
       });
       props.addGnode(newGnode);
+      if (intValue && autoIncrement) {
+        setInputData(intValue + 1 + '');
+      }
     }
   };
-
-  const [sourceNode, setSourceNode] = useState<IGnode | null>(null);
 
   const unselectSourceNode = () => {
     if (!sourceNode) return;
@@ -182,6 +186,13 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         <button className="small-box" onClick={() => props.unvisitAll()}>
           unvisit all
         </button>
+
+        {modeState === 0 && (
+          <div className="left-panel-checkbox-wrapper">
+            <label htmlFor="">auto-increment</label>
+            <Checkbox isChecked={autoIncrement} onClick={() => setAutoIncrement(!autoIncrement)} />
+          </div>
+        )}
       </div>
       <div className="right-panel" onClick={createNodeOnClick} ref={boardRef}>
         {Object.values(props.nodeManager.graph.nodes).map((node) => (
