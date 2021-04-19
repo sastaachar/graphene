@@ -1,0 +1,13 @@
+.checkbox {
+  &-input {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    border: 3px solid var(--primary);
+    border-radius: 3px;
+    transition: all 0.2s ease-out;
+  }
+  &-on {
+    background-color: var(--green);
+  }
+}
