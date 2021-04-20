@@ -30,8 +30,8 @@ export const Gnode: React.FC<Props> = (props: Props) => {
   classNameInside += props.isRoot ? ' gnode--root' : props.isDestination ? ' gnode--destination' : '';
 
   const style: CSSProperties = {
-    left: props.gnode.pos.x,
-    top: props.gnode.pos.y,
+    left: props.gnode.pos.x - 50,
+    top: props.gnode.pos.y - 50,
   };
 
   const handleOnClick = () => {

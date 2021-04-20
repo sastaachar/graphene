@@ -33,20 +33,52 @@ const NodeManager: React.FC<Props> = (props: Props) => {
   const [algorithmState, setAlgorithmState] = useState(0);
   const [sourceNode, setSourceNode] = useState<IGnode | null>(null);
   const [autoIncrement, setAutoIncrement] = useState(false);
+
+  // create node
   const createNodeOnClick = (e: MouseEvent<HTMLDivElement>) => {
     if (modeState != 0) return;
     if (inputData) {
       const intValue = parseInt(inputData);
       const nodeValue = intValue || inputData;
+      console.log(intValue, nodeValue, intValue ?? inputData);
       const newGnode = createGnode(nodeValue, {
-        x: e.pageX - (boardRef.current?.offsetLeft ?? 0) - 50 + (boardRef.current?.scrollLeft ?? 0),
-        y: e.pageY - (boardRef.current?.offsetTop ?? 0) - 50 + (boardRef.current?.scrollTop ?? 0),
+        x: e.pageX - (boardRef.current?.offsetLeft ?? 0) + (boardRef.current?.scrollLeft ?? 0),
+        y: e.pageY - (boardRef.current?.offsetTop ?? 0) + (boardRef.current?.scrollTop ?? 0),
       });
+
       props.addGnode(newGnode);
-      if (intValue && autoIncrement) {
+      if ((intValue === 0 || intValue) && autoIncrement) {
         setInputData(intValue + 1 + '');
       }
     }
+  };
+
+  // create path
+  const createPathOnClick = (sourceNode: IGnode, destinationNode: IGnode) => {
+    if (destinationNode.id === sourceNode.id) {
+      // no self loops for now
+      console.log('No self loops');
+      unselectSourceNode();
+      return;
+    }
+
+    // check if path already exists
+    const connections = props.nodeManager.graph.nodes[sourceNode.id].connections;
+    for (let i = 0; i < connections.length; i++) {
+      const conn = connections[i];
+      if (conn.nodeID === destinationNode.id) {
+        // path already exists
+        console.log('Path already exists');
+        unselectSourceNode();
+        return;
+      }
+    }
+
+    const newPath = createPath(sourceNode, destinationNode, parseInt(inputData));
+    props.addPath(newPath);
+
+    unselectSourceNode();
+    return;
   };
 
   const unselectSourceNode = () => {
@@ -58,6 +90,8 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     props.updateNode(selectedNode);
     setSourceNode(null);
   };
+
+  // create path
   const updateNodePairs = (node: IGnode) => {
     if (!sourceNode) {
       setSourceNode(node);
@@ -66,34 +100,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
       return;
     }
     // source is set
-
-    if (node.id === sourceNode.id) {
-      // no self loops for now
-      console.log('No self loops');
-      unselectSourceNode();
-      return;
-    }
-
-    // check if path already exists
-    const connections = props.nodeManager.graph.nodes[sourceNode.id].connections;
-    for (let i = 0; i < connections.length; i++) {
-      const conn = connections[i];
-      if (conn.nodeID === node.id) {
-        // path already exists
-        console.log('Path already exists');
-        unselectSourceNode();
-        return;
-      }
-    }
-
-    const newPath = createPath(sourceNode, node);
-    props.addPath(newPath);
-
-    // const newPath = createPath();
-    // updateGnode  -> connections updated
-    // updateGraph  -> adding path to paths
-    unselectSourceNode();
-    return;
+    createPathOnClick(sourceNode, node);
   };
 
   const optionsMode = [

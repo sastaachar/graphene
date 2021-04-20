@@ -17,6 +17,7 @@ export interface IPath {
 export const createPath = (
   source: { id: string; pos: Position },
   destination: { id: string; pos: Position },
+  weight?: number,
 ): IPath => {
   return {
     id: uuidv4(),
@@ -25,5 +26,6 @@ export const createPath = (
     sourcePos: source.pos,
     destinationPos: destination.pos,
     state: 'default',
+    weight: weight || undefined,
   };
 };
