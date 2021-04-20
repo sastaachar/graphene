@@ -36,10 +36,15 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
     case ADD_PATH: {
       const newPath = action.payload.path;
       newState.graph.paths = { ...newState.graph.paths, [newPath.id]: newPath };
-      const oldConnections = newState.graph.nodes[newPath.sourceId].connections;
+      const sourceOldConnections = newState.graph.nodes[newPath.sourceId].connections;
       newState.graph.nodes[newPath.sourceId].connections = [
-        ...oldConnections,
+        ...sourceOldConnections,
         { nodeID: newPath.destinationId, pathID: newPath.id },
+      ];
+      const destOldConnections = newState.graph.nodes[newPath.destinationId].connections;
+      newState.graph.nodes[newPath.destinationId].connections = [
+        ...destOldConnections,
+        { nodeID: newPath.sourceId, pathID: newPath.id },
       ];
       return newState;
     }
