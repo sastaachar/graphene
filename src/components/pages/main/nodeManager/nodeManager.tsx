@@ -40,7 +40,6 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     if (inputData) {
       const intValue = parseInt(inputData);
       const nodeValue = intValue || inputData;
-      console.log(intValue, nodeValue, intValue ?? inputData);
       const newGnode = createGnode(nodeValue, {
         x: e.pageX - (boardRef.current?.offsetLeft ?? 0) + (boardRef.current?.scrollLeft ?? 0),
         y: e.pageY - (boardRef.current?.offsetTop ?? 0) + (boardRef.current?.scrollTop ?? 0),
@@ -74,7 +73,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
       }
     }
 
-    const newPath = createPath(sourceNode, destinationNode, parseInt(inputData));
+    const newPath = createPath(sourceNode.id, destinationNode.id, parseInt(inputData));
     props.addPath(newPath);
 
     unselectSourceNode();
@@ -108,6 +107,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     { key: 1, value: 'Create Path' },
     { key: 2, value: 'Set Root' },
     { key: 3, value: 'Set Destination' },
+    { key: 4, value: 'Move node' },
   ];
 
   const updateModeSelection = (node: IGnode) => {
@@ -209,6 +209,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
             onNodeSelect={updateModeSelection}
             isRoot={node.id === props.nodeManager.graph.rootID}
             isDestination={node.id === props.nodeManager.graph.destinationID}
+            allowMove={modeState === 4}
           />
         ))}
         {Object.values(props.nodeManager.graph.paths).map((path) => (

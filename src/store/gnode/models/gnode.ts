@@ -1,7 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Position } from '../../sharedModels';
 
 type NodeStates = 'default' | 'root' | 'selected' | 'touched';
+
+export interface Position {
+  x: number;
+  y: number;
+}
 
 export interface Connection {
   nodeID: string;

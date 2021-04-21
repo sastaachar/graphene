@@ -1,0 +1,8 @@
+.movableCard {
+  position: absolute;
+  cursor: grab;
+}
+
+.movableCard:active {
+  cursor: grabbing;
+}
