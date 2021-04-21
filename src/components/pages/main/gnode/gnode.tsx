@@ -14,7 +14,7 @@ interface Props extends PropsFromRedux {
   onNodeSelect: (node: IGnode) => void;
 }
 
-export const Gnode: React.FC<Props> = (props: Props) => {
+const Gnode: React.FC<Props> = (props: Props) => {
   const isSelected = props.gnode.state === 'selected',
     isTouched = props.gnode.state === 'touched';
   let classNameOutside = 'gnode';

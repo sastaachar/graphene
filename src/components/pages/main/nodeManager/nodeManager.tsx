@@ -203,12 +203,10 @@ const NodeManager: React.FC<Props> = (props: Props) => {
       </div>
       <div className="right-panel" onClick={createNodeOnClick} ref={boardRef}>
         {Object.values(props.nodeManager.graph.nodes).map((node) => (
-          //! FIX : need to pass updateNode here or typescript starts crying
           <Gnode
             key={node.id}
             gnode={node}
             onNodeSelect={updateModeSelection}
-            updateNode={updateNode}
             isRoot={node.id === props.nodeManager.graph.rootID}
             isDestination={node.id === props.nodeManager.graph.destinationID}
           />

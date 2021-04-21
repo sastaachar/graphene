@@ -1,3 +1,3 @@
-import { Gnode } from './gnode';
+import Gnode from './gnode';
 
 export { Gnode };
