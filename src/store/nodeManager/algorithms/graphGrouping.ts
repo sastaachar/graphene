@@ -9,7 +9,12 @@ import { groupNode, touchNode, Visited } from './helpers';
 
 import { Color } from '../../sharedModels';
 
-const groupGraph = (graph: IGraph, groupColors: Color[], updateNode: (x: IGnode) => UpdateNodeAction) => {
+const groupGraph = (
+  graph: IGraph,
+  groupColors: Color[],
+  soloColor: Color,
+  updateNode: (x: IGnode) => UpdateNodeAction,
+) => {
   console.log('Starting Grouping');
 
   const visited: Visited = {};
@@ -21,7 +26,18 @@ const groupGraph = (graph: IGraph, groupColors: Color[], updateNode: (x: IGnode)
     ++groupId;
     const groupColor = groupColors[groupId % groupColors.length];
     const q = new Queue<string>();
+
     q.push(node.id);
+
+    if (node.connections.length === 0) {
+      // lonely node
+      setTimeout(() => {
+        updateNode(groupNode(node, '' + groupId, soloColor));
+      }, delay);
+      delay += 150;
+      return;
+    }
+
     while (!q.empty()) {
       const curId = q.pop() as string;
       console.log(curId);

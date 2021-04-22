@@ -157,7 +157,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         break;
 
       case 3:
-        groupGraph(props.nodeManager.graph, graphColors, props.updateNode);
+        groupGraph(props.nodeManager.graph, graphColors, [234, 252, 255, 1], props.updateNode);
         break;
       default:
         break;
