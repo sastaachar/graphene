@@ -34,7 +34,7 @@ export interface RemovePathAction {
 export const SET_ROOT = 'SET_ROOT';
 export interface SetRootAction {
   type: typeof SET_ROOT;
-  payload: { nodeID: string };
+  payload: { nodeID: string | undefined };
 }
 
 export const UNVISIT_ALL = 'UNVISIT_ALL';
@@ -53,7 +53,7 @@ export const SET_DESTINATION = 'SET_DESTINATION';
 
 export interface SetDestinationAction {
   type: typeof SET_DESTINATION;
-  payload: { nodeID: string };
+  payload: { nodeID: string | undefined };
 }
 
 export type NodeMangerAction =

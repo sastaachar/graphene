@@ -37,4 +37,19 @@
     background-color: var(--yellow);
     transition: background-color 0s;
   }
+
+  &--root {
+    // gnode-inner-content
+    span {
+      color: var(--primary-darker);
+    }
+
+    background-color: var(--red);
+    transition: background-color 0s;
+  }
+
+  &--destination {
+    background-color: var(--primary-darker);
+    transition: background-color 0s;
+  }
 }

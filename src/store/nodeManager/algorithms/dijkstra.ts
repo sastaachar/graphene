@@ -36,7 +36,7 @@ const dijkstra = (
   console.log('Starting Dijkstra');
 
   const compare = (a: PathCost, b: PathCost): boolean => {
-    return a.cost >= b.cost;
+    return a.cost <= b.cost;
   };
 
   const costs: Costs = {};
@@ -59,7 +59,7 @@ const dijkstra = (
   while (!q.empty()) {
     const cur = q.pop() as PathCost;
 
-    console.log(cur.nodeID);
+    console.log(graph.nodes[cur.nodeID].data);
     const curNode = graph.nodes[cur.nodeID];
     visited[cur.nodeID] = true;
 
@@ -73,7 +73,7 @@ const dijkstra = (
     if (graph.destinationID === cur.nodeID) break;
 
     graph.nodes[cur.nodeID].connections.forEach((conn) => {
-      const pathCost = graph.paths[conn.pathID].weight ?? 10;
+      const pathCost = graph.paths[conn.pathID].weight ?? 0;
       if (!visited[conn.nodeID] && costs[conn.nodeID] > cur.cost + pathCost) {
         costs[conn.nodeID] = cur.cost + pathCost;
         q.push({ cost: costs[conn.nodeID], nodeID: conn.nodeID });
@@ -111,7 +111,10 @@ const dijkstra = (
     }
   }
 
-  console.log(costs);
+  Object.keys(costs).forEach((id) => {
+    console.log(graph.nodes[id].data, costs[id]);
+  });
+
   console.log('Dijkstra finished');
 };
 

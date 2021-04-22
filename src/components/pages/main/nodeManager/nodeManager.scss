@@ -29,6 +29,14 @@
       padding: 0px 10px;
       margin: 10px auto;
     }
+    &-checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      label {
+        margin-right: 10px;
+      }
+    }
   }
 
   .right-panel {

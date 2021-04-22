@@ -9,14 +9,14 @@ export interface Connection {
 }
 export interface IGnode {
   id: string;
-  data: number;
+  data: number | string;
   visited: boolean;
   state: NodeStates;
   connections: Connection[];
   pos: Position;
 }
 
-export const createGnode = (data: number, pos: Position): IGnode => {
+export const createGnode = (data: number | string, pos: Position): IGnode => {
   return {
     id: uuidv4(),
     data,
