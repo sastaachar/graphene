@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import { createGnode, IGnode } from '../../../../store/gnode/models';
 import { bfs, dfs, dijkstra } from '../../../../store/nodeManager/algorithms';
+import groupGraph from '../../../../store/nodeManager/algorithms/graphGrouping';
 import {
   addGnode,
   addPath,
@@ -18,6 +19,7 @@ import { Checkbox } from '../../../shared/checkbox';
 import { SelectSearch } from '../../../shared/select-search';
 import { Gnode } from '../gnode';
 import { Path } from '../path';
+import { graphColors } from './graphColors';
 
 import './nodeManager.scss';
 
@@ -137,6 +139,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     { key: 0, value: 'BFS' },
     { key: 1, value: 'DFS' },
     { key: 2, value: 'Dijkstra' },
+    { key: 3, value: 'Group graph' },
   ];
 
   const updateAlgoSelection = () => {
@@ -153,6 +156,9 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         dijkstra(props.nodeManager.graph, props.updateNode, props.updatePath);
         break;
 
+      case 3:
+        groupGraph(props.nodeManager.graph, graphColors, props.updateNode);
+        break;
       default:
         break;
     }

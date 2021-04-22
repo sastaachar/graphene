@@ -1,5 +1,6 @@
 import { IGnode } from '../../gnode/models';
 import { IPath } from '../../path/models';
+import { Color } from '../../sharedModels';
 
 export interface Visited {
   [key: string]: boolean;
@@ -20,5 +21,15 @@ export const visitPath = (path: IPath) => {
 export const touchNode = (node: IGnode) => {
   const newNode = { ...node };
   newNode.state = 'touched';
+  return newNode;
+};
+
+export const groupNode = (node: IGnode, id: string, color: Color) => {
+  const newNode = { ...node };
+  newNode.state = 'grouped';
+  newNode.group = {
+    id,
+    color,
+  };
   return newNode;
 };

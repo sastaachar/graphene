@@ -1,7 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Position } from '../../sharedModels';
 
-type NodeStates = 'default' | 'root' | 'selected' | 'touched';
+import { Color } from '../../sharedModels';
+
+type NodeStates = 'default' | 'root' | 'selected' | 'touched' | 'grouped';
 
 export interface Connection {
   nodeID: string;
@@ -14,6 +16,10 @@ export interface IGnode {
   state: NodeStates;
   connections: Connection[];
   pos: Position;
+  group?: {
+    id: string;
+    color: Color;
+  };
 }
 
 export const createGnode = (data: number | string, pos: Position): IGnode => {
