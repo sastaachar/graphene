@@ -178,8 +178,8 @@ const NodeManager: React.FC<Props> = (props: Props) => {
           <SelectSearch
             options={optionsMode}
             defaultSlectText="Select Mode"
-            defaultSelectKey={0}
-            setOptionState={setModeState}
+            keyState={modeState}
+            onChange={(key) => setModeState(key as number)}
           ></SelectSearch>
         </div>
         <div className="left-panel-selection">
@@ -187,8 +187,8 @@ const NodeManager: React.FC<Props> = (props: Props) => {
           <SelectSearch
             options={optionsAlgorithm}
             defaultSlectText="Select Mode"
-            defaultSelectKey={0}
-            setOptionState={setAlgorithmState}
+            keyState={algorithmState}
+            onChange={(key) => setAlgorithmState(key as number)}
           ></SelectSearch>
         </div>
 
