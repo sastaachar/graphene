@@ -38,9 +38,15 @@ const Gnode: React.FC<Props> = (props: Props) => {
     props.onNodeSelect(props.gnode);
   };
 
+  const innerStyle: CSSProperties = {};
+  if (props.gnode.state === 'grouped') {
+    const color = props.gnode.group?.color ?? [0, 0, 0, 0];
+    innerStyle.backgroundColor = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
+  }
+
   return (
     <div className={classNameOutside} style={style} onClick={handleOnClick}>
-      <div className={classNameInside}>
+      <div className={classNameInside} style={innerStyle}>
         <span className="gnode-inner-content">{props.gnode.data}</span>
       </div>
     </div>
