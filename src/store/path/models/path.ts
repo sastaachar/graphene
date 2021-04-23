@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Position } from '../../sharedModels';
 
-type PathState = 'default' | 'travel';
+type PathState = 'default' | 'travel' | 'warn';
 
 export interface IPath {
   id: string;

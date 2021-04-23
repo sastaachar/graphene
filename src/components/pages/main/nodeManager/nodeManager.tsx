@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import { createGnode, IGnode } from '../../../../store/gnode/models';
 import { bfs, dfs, dijkstra } from '../../../../store/nodeManager/algorithms';
+import bellmanford from '../../../../store/nodeManager/algorithms/bellmanford';
 import groupGraph from '../../../../store/nodeManager/algorithms/graphGrouping';
 import {
   addGnode,
@@ -140,6 +141,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     { key: 1, value: 'DFS' },
     { key: 2, value: 'Dijkstra' },
     { key: 3, value: 'Group graph' },
+    { key: 4, value: 'Bellmanford' },
   ];
 
   const updateAlgoSelection = () => {
@@ -158,6 +160,10 @@ const NodeManager: React.FC<Props> = (props: Props) => {
 
       case 3:
         groupGraph(props.nodeManager.graph, graphColors, [234, 252, 255, 1], props.updateNode);
+        break;
+
+      case 4:
+        bellmanford(props.nodeManager.graph, props.updateNode, props.updatePath);
         break;
       default:
         break;
