@@ -3,25 +3,9 @@ import { IGnode } from '../../gnode/models';
 import { IPath } from '../../path/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction, UpdatePathAction } from '../models/nodeManagerActionTypes';
-import { touchNode, Visited, visitNode, visitPath } from './helpers';
+import { Costs, PathCost, Predecessor, PrevState, touchNode, Visited, visitNode, visitPath } from './helpers';
 
 // there should be no negative weights
-
-interface PathCost {
-  cost: number;
-  nodeID: string;
-}
-
-interface Costs {
-  [key: string]: number;
-}
-type PrevState = {
-  pathID: string | null;
-  parentID: string | null;
-};
-interface Predecessor {
-  [key: string]: PrevState;
-}
 
 const dijkstra = (
   graph: IGraph,
