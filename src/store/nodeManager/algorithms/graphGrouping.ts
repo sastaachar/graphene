@@ -21,6 +21,8 @@ const groupGraph = (
   let delay: number = 0;
   let groupId = -1;
 
+  // TODO : change alpha values once color list is exhausted
+
   Object.values(graph.nodes).forEach((node) => {
     if (visited[node.id]) return;
     ++groupId;
