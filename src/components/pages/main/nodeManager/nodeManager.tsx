@@ -43,7 +43,6 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     if (inputData) {
       const intValue = parseInt(inputData);
       const nodeValue = intValue || inputData;
-      console.log(intValue, nodeValue, intValue ?? inputData);
       const newGnode = createGnode(nodeValue, {
         x: e.pageX - (boardRef.current?.offsetLeft ?? 0) + (boardRef.current?.scrollLeft ?? 0),
         y: e.pageY - (boardRef.current?.offsetTop ?? 0) + (boardRef.current?.scrollTop ?? 0),
