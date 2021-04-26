@@ -1,4 +1,4 @@
-import React, { MouseEvent, useRef, useState } from 'react';
+import React, { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { createGnode, IGnode } from '../../../../store/gnode/models';
@@ -36,7 +36,17 @@ const NodeManager: React.FC<Props> = (props: Props) => {
   const [algorithmState, setAlgorithmState] = useState(0);
 
   const [sourceNode, setSourceNode] = useState<IGnode | null>(null);
+  const [clickedNode, setClickedNode] = useState<IGnode | null>(null);
+
   const [autoIncrement, setAutoIncrement] = useState(false);
+
+  useEffect(() => {
+    if (handleNodeClickChange) handleNodeClickChange(clickedNode as IGnode);
+  }, [clickedNode]);
+
+  const handleNodeClick = useCallback((node) => {
+    setClickedNode(node);
+  }, []);
 
   // create node
   const createNodeOnClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -87,7 +97,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     setSourceNode(null);
   };
 
-  const handleNodeClick = (node: IGnode) => {
+  const handleNodeClickChange = (node: IGnode) => {
     // node is selected : do stuff to handle that
     switch (modeState) {
       case 1:
@@ -115,6 +125,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
       default:
         break;
     }
+    setClickedNode(null);
   };
 
   const handleAlgoStart = () => {

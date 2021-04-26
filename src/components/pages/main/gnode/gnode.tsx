@@ -61,4 +61,4 @@ const mapDispatchToProps = {
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(Gnode);
+export default connector(React.memo(Gnode));
