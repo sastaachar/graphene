@@ -34,6 +34,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
 
   const [modeState, setModeState] = useState(0);
   const [algorithmState, setAlgorithmState] = useState(0);
+
   const [sourceNode, setSourceNode] = useState<IGnode | null>(null);
   const [autoIncrement, setAutoIncrement] = useState(false);
 
@@ -60,7 +61,6 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     if (destinationNode.id === sourceNode.id) {
       // no self loops for now
       console.log('No self loops');
-      unselectSourceNode();
       return;
     }
 
@@ -71,79 +71,53 @@ const NodeManager: React.FC<Props> = (props: Props) => {
       if (conn.nodeID === destinationNode.id) {
         // path already exists
         console.log('Path already exists');
-        unselectSourceNode();
         return;
       }
     }
 
     const newPath = createPath(sourceNode, destinationNode, parseInt(inputData));
     props.addPath(newPath);
-
-    unselectSourceNode();
     return;
   };
 
   const unselectSourceNode = () => {
     if (!sourceNode) return;
-    // we need to use the latest version to update
-    // TODO : use a property based update system
     const selectedNode = props.nodeManager.graph.nodes[sourceNode.id];
-    selectedNode.state = 'default';
-    props.updateNode(selectedNode);
+    props.updateNode({ ...selectedNode, state: 'default' });
     setSourceNode(null);
   };
 
-  // create path
-  const updateNodePairs = (node: IGnode) => {
-    if (!sourceNode) {
-      setSourceNode(node);
-      node.state = 'selected';
-      props.updateNode(node);
-      return;
-    }
-    // source is set
-    createPathOnClick(sourceNode, node);
-  };
-
-  const optionsMode = [
-    { key: 0, value: 'Create Node' },
-    { key: 1, value: 'Create Path' },
-    { key: 2, value: 'Set Root' },
-    { key: 3, value: 'Set Destination' },
-  ];
-
-  const updateModeSelection = (node: IGnode) => {
+  const handleNodeClick = (node: IGnode) => {
     // node is selected : do stuff to handle that
     switch (modeState) {
       case 1:
+        if (!sourceNode) {
+          setSourceNode(node);
+          props.updateNode({ ...node, state: 'selected' });
+          return;
+        }
         // update node pairs to create path
-        updateNodePairs(node);
+        createPathOnClick(sourceNode, node);
+        unselectSourceNode();
         break;
+
       case 2:
         // set node as root
         if (props.nodeManager.graph.rootID !== node.id) props.setRoot(node.id);
         else props.setRoot(undefined);
-
         break;
 
       case 3:
         if (props.nodeManager.graph.destinationID !== node.id) props.setDestination(node.id);
         else props.setDestination(undefined);
         break;
+
       default:
         break;
     }
   };
 
-  const optionsAlgorithm = [
-    { key: 0, value: 'BFS' },
-    { key: 1, value: 'DFS' },
-    { key: 2, value: 'Dijkstra' },
-    { key: 3, value: 'Group graph' },
-    { key: 4, value: 'Bellmanford' },
-  ];
-
-  const updateAlgoSelection = () => {
+  const handleAlgoStart = () => {
     switch (algorithmState) {
       case 0:
         bfs(props.nodeManager.graph, props.updateNode);
@@ -168,6 +142,19 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         break;
     }
   };
+  const optionsMode = [
+    { key: 0, value: 'Create Node' },
+    { key: 1, value: 'Create Path' },
+    { key: 2, value: 'Set Root' },
+    { key: 3, value: 'Set Destination' },
+  ];
+  const optionsAlgorithm = [
+    { key: 0, value: 'BFS' },
+    { key: 1, value: 'DFS' },
+    { key: 2, value: 'Dijkstra' },
+    { key: 3, value: 'Group graph' },
+    { key: 4, value: 'Bellmanford' },
+  ];
 
   return (
     <div className="nodemanager">
@@ -197,7 +184,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
           ></SelectSearch>
         </div>
 
-        <button className="left-panel-start small-box" onClick={updateAlgoSelection}>
+        <button className="left-panel-start small-box" onClick={handleAlgoStart}>
           start
         </button>
 
@@ -217,7 +204,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
           <Gnode
             key={node.id}
             gnode={node}
-            onNodeSelect={updateModeSelection}
+            onClick={handleNodeClick}
             isRoot={node.id === props.nodeManager.graph.rootID}
             isDestination={node.id === props.nodeManager.graph.destinationID}
           />

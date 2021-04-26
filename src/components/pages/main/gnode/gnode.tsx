@@ -11,7 +11,7 @@ interface Props extends PropsFromRedux {
   gnode: IGnode;
   isRoot?: boolean;
   isDestination?: boolean;
-  onNodeSelect: (node: IGnode) => void;
+  onClick: (node: IGnode) => void;
 }
 
 const Gnode: React.FC<Props> = (props: Props) => {
@@ -35,7 +35,7 @@ const Gnode: React.FC<Props> = (props: Props) => {
   };
 
   const handleOnClick = () => {
-    props.onNodeSelect(props.gnode);
+    props.onClick(props.gnode);
   };
 
   const innerStyle: CSSProperties = {};
