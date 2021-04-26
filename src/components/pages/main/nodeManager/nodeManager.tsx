@@ -85,7 +85,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
       }
     }
 
-    const newPath = createPath(sourceNode, destinationNode, parseInt(inputData));
+    const newPath = createPath(sourceNode.id, destinationNode.id, parseInt(inputData));
     props.addPath(newPath);
     return;
   };
