@@ -7,7 +7,7 @@ interface Props {
   path: IPath;
 }
 
-export const Path: React.FC<Props> = (props) => {
+const Path: React.FC<Props> = (props) => {
   const style: CSSProperties = { stroke: props.path.state === 'travel' ? 'var(--green)' : 'var(--primary-darker)' };
   return (
     <div className="path-wrapper">
@@ -35,3 +35,5 @@ export const Path: React.FC<Props> = (props) => {
     </div>
   );
 };
+
+export default React.memo(Path);
