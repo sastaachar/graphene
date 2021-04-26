@@ -41,7 +41,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
   const [autoIncrement, setAutoIncrement] = useState(false);
 
   useEffect(() => {
-    if (handleNodeClickChange) handleNodeClickChange(clickedNode as IGnode);
+    if (clickedNode) handleNodeClickChange(clickedNode as IGnode);
   }, [clickedNode]);
 
   const handleNodeClick = useCallback((node) => {
