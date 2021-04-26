@@ -5,7 +5,7 @@ import { Queue } from '../../../dataStructures';
 import { IGnode } from '../../gnode/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction } from '../models/nodeManagerActionTypes';
-import { groupNode, touchNode, Visited } from './helpers';
+import { Visited } from './helpers';
 
 import { Color } from '../../sharedModels';
 
@@ -25,20 +25,21 @@ const groupGraph = (
 
   Object.values(graph.nodes).forEach((node) => {
     if (visited[node.id]) return;
-    ++groupId;
-    const groupColor = groupColors[groupId % groupColors.length];
-    const q = new Queue<string>();
-
-    q.push(node.id);
 
     if (node.connections.length === 0) {
       // lonely node
       setTimeout(() => {
-        updateNode(groupNode(node, '' + groupId, soloColor));
+        updateNode({ ...node, state: 'grouped', group: { id: '' + -1, color: soloColor } });
       }, delay);
       delay += 150;
       return;
     }
+
+    ++groupId;
+    const groupColor = groupColors[groupId % groupColors.length];
+
+    const q = new Queue<string>();
+    q.push(node.id);
 
     while (!q.empty()) {
       const curId = q.pop() as string;
@@ -47,7 +48,7 @@ const groupGraph = (
       visited[cur.id] = true;
 
       setTimeout(() => {
-        updateNode(groupNode(cur, '' + groupId, groupColor));
+        updateNode({ ...cur, state: 'grouped', group: { id: '' + groupId, color: groupColor } });
       }, delay);
 
       delay += 150;
@@ -57,7 +58,7 @@ const groupGraph = (
         if (!visited[conn.nodeID]) {
           q.push(conn.nodeID);
           setTimeout(() => {
-            updateNode(touchNode(curNode));
+            updateNode({ ...curNode, state: 'touched' });
           }, delay);
         }
       });

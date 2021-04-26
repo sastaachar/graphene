@@ -2,7 +2,7 @@ import { Queue } from '../../../dataStructures';
 import { IGnode } from '../../gnode/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction } from '../models/nodeManagerActionTypes';
-import { touchNode, Visited, visitNode } from './helpers';
+import { Visited } from './helpers';
 
 const bfs = (graph: IGraph, updateNode: (x: IGnode) => UpdateNodeAction) => {
   if (!graph.rootID) {
@@ -26,7 +26,7 @@ const bfs = (graph: IGraph, updateNode: (x: IGnode) => UpdateNodeAction) => {
     visited[cur.id] = true;
 
     setTimeout(() => {
-      updateNode(visitNode(cur));
+      updateNode({ ...cur, visited: true });
     }, delay);
 
     delay += 300;
@@ -36,7 +36,7 @@ const bfs = (graph: IGraph, updateNode: (x: IGnode) => UpdateNodeAction) => {
       if (!visited[conn.nodeID]) {
         q.push(conn.nodeID);
         setTimeout(() => {
-          updateNode(touchNode(curNode));
+          updateNode({ ...curNode, state: 'touched' });
         }, delay);
       }
     });

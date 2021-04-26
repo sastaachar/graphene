@@ -8,7 +8,7 @@ import { IGnode } from '../../gnode/models';
 import { IPath } from '../../path/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction, UpdatePathAction } from '../models/nodeManagerActionTypes';
-import { Costs, Predecessor, PrevState, touchNode, visitPath } from './helpers';
+import { Costs, Predecessor, PrevState } from './helpers';
 
 const bellmanford = (
   graph: IGraph,
@@ -48,12 +48,12 @@ const bellmanford = (
 
       //  touch both source and destination
       setTimeout(() => {
-        updateNode(touchNode(graph.nodes[path.sourceId]));
+        updateNode({ ...graph.nodes[path.sourceId], state: 'touched' });
       }, delay);
       delay += 300;
 
       setTimeout(() => {
-        updateNode(touchNode(graph.nodes[path.destinationId]));
+        updateNode({ ...graph.nodes[path.destinationId], state: 'touched' });
       }, delay);
       delay += 300;
     }
@@ -77,7 +77,7 @@ const bellmanford = (
         break;
       }
       setTimeout(() => {
-        if (connPath.pathID) updatePath(visitPath(graph.paths[connPath.pathID]));
+        if (connPath.pathID) updatePath({ ...graph.paths[connPath.pathID], state: 'travel' });
       }, delay);
 
       delay += 300;

@@ -3,7 +3,7 @@ import { IGnode } from '../../gnode/models';
 import { IPath } from '../../path/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction, UpdatePathAction } from '../models/nodeManagerActionTypes';
-import { Costs, PathCost, Predecessor, PrevState, touchNode, Visited, visitNode, visitPath } from './helpers';
+import { Costs, PathCost, Predecessor, PrevState, Visited } from './helpers';
 
 // there should be no negative weights
 
@@ -48,7 +48,7 @@ const dijkstra = (
     visited[cur.nodeID] = true;
 
     setTimeout(() => {
-      updateNode(visitNode(curNode));
+      updateNode({ ...curNode, visited: true });
     }, delay);
 
     delay += 300;
@@ -62,7 +62,7 @@ const dijkstra = (
         costs[conn.nodeID] = cur.cost + pathCost;
         q.push({ cost: costs[conn.nodeID], nodeID: conn.nodeID });
         setTimeout(() => {
-          updateNode(touchNode(curNode));
+          updateNode({ ...curNode, state: 'touched' });
         }, delay);
         pred[conn.nodeID] = { parentID: cur.nodeID, pathID: conn.pathID };
       }
@@ -87,7 +87,7 @@ const dijkstra = (
         break;
       }
       setTimeout(() => {
-        if (connPath.pathID) updatePath(visitPath(graph.paths[connPath.pathID]));
+        if (connPath.pathID) updatePath({ ...graph.paths[connPath.pathID], state: 'travel' });
       }, delay);
 
       delay += 300;
