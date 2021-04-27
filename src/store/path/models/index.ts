@@ -1,4 +1,4 @@
-import { IPath, createPath } from './path';
+import { IPath, createPath, PathType } from './path';
 
 export { createPath };
-export type { IPath };
+export type { IPath, PathType };

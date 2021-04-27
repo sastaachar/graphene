@@ -12,6 +12,7 @@ interface Props extends PropsFromRedux {
   isRoot?: boolean;
   isDestination?: boolean;
   onClick: (node: IGnode) => void;
+  _state?: string;
 }
 
 const Gnode: React.FC<Props> = (props: Props) => {

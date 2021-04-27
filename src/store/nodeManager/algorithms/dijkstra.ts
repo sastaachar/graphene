@@ -76,6 +76,8 @@ const dijkstra = (
 
     let prev: string | null = graph.destinationID;
 
+    const paths: string[] = [];
+
     while (prev) {
       // update path
 
@@ -86,12 +88,17 @@ const dijkstra = (
         console.log("Can't reach ", prev);
         break;
       }
-      setTimeout(() => {
-        if (connPath.pathID) updatePath({ ...graph.paths[connPath.pathID], state: 'travel' });
-      }, delay);
+      if (connPath.pathID) paths.push(connPath.pathID);
 
-      delay += 300;
       prev = connPath.parentID;
+    }
+
+    for (let i = paths.length - 1; i >= 0; i--) {
+      const pathId = paths[i];
+      setTimeout(() => {
+        updatePath({ ...graph.paths[pathId], state: 'travel' });
+      }, delay);
+      delay += 300;
     }
   }
 

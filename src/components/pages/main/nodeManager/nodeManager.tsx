@@ -2,6 +2,7 @@ import React, { MouseEvent, useCallback, useEffect, useRef, useState } from 'rea
 import { connect, ConnectedProps } from 'react-redux';
 
 import { createGnode, IGnode } from '../../../../store/gnode/models';
+import { PathType } from '../../../../store/path/models';
 import { bfs, dfs, dijkstra } from '../../../../store/nodeManager/algorithms';
 import bellmanford from '../../../../store/nodeManager/algorithms/bellmanford';
 import groupGraph from '../../../../store/nodeManager/algorithms/graphGrouping';
@@ -25,6 +26,10 @@ import { graphColors } from './graphColors';
 import './nodeManager.scss';
 
 interface Props extends PropsFromRedux {}
+
+// ! Fix this
+// _state has been to added to node and path to prevent
+// re renders (performance optimizations using React.memo)
 
 const NodeManager: React.FC<Props> = (props: Props) => {
   // for node data input
@@ -66,6 +71,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     }
   };
 
+  let pathType: PathType = 'line';
   // create path
   const createPathOnClick = (sourceNode: IGnode, destinationNode: IGnode) => {
     if (destinationNode.id === sourceNode.id) {
@@ -85,7 +91,17 @@ const NodeManager: React.FC<Props> = (props: Props) => {
       }
     }
 
-    const newPath = createPath(sourceNode.id, destinationNode.id, parseInt(inputData));
+    const destConnections = props.nodeManager.graph.nodes[destinationNode.id].connections;
+    for (let i = 0; i < destConnections.length; i++) {
+      const conn = destConnections[i];
+      if (conn.nodeID === sourceNode.id) {
+        // path already exists
+        pathType = 'curve';
+        break;
+      }
+    }
+
+    const newPath = createPath(sourceNode.id, destinationNode.id, pathType, parseInt(inputData));
     props.addPath(newPath);
     return;
   };
@@ -167,6 +183,8 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     { key: 4, value: 'Bellmanford' },
   ];
 
+  // nodes not rerendering on state change
+
   return (
     <div className="nodemanager">
       <div className="left-panel">
@@ -215,13 +233,14 @@ const NodeManager: React.FC<Props> = (props: Props) => {
           <Gnode
             key={node.id}
             gnode={node}
+            _state={node.state + node.visited}
             onClick={handleNodeClick}
             isRoot={node.id === props.nodeManager.graph.rootID}
             isDestination={node.id === props.nodeManager.graph.destinationID}
           />
         ))}
         {Object.values(props.nodeManager.graph.paths).map((path) => (
-          <Path key={path.id} path={path} />
+          <Path key={path.id} path={path} _state={path.state} />
         ))}
       </div>
     </div>

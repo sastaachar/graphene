@@ -15,6 +15,11 @@ const bellmanford = (
   updateNode: (x: IGnode) => UpdateNodeAction,
   updatePath: (x: IPath) => UpdatePathAction,
 ) => {
+  if (!graph.rootID) {
+    console.log('Root is not set');
+    return;
+  }
+
   console.log('Starting Bellmanford');
 
   const costs: Costs = {};
@@ -24,6 +29,8 @@ const bellmanford = (
   const paths: string[] = [];
   // add all the pathids
   Object.keys(graph.paths).forEach((k) => paths.push(k));
+  Object.keys(graph.nodes).forEach((k) => (costs[k] = Infinity));
+  costs[graph.rootID] = 0;
 
   const N: number = Object.keys(graph.nodes).length;
   const M: number = paths.length;
@@ -32,7 +39,10 @@ const bellmanford = (
     for (let j = 0; j < M; j++) {
       const path = graph.paths[paths[j]];
 
-      // bi directional paths
+      setTimeout(() => {
+        updatePath({ ...graph.paths[path.id], state: 'touched' });
+      }, delay);
+      delay += 200;
 
       if (costs[path.destinationId] > costs[path.sourceId] + (path.weight ?? 0)) {
         // visit node and update pred
@@ -40,22 +50,10 @@ const bellmanford = (
         pred[path.destinationId] = { parentID: path.sourceId, pathID: path.id };
       }
 
-      if (costs[path.sourceId] > costs[path.destinationId] + (path.weight ?? 0)) {
-        // visit node and update pred
-        costs[path.sourceId] = costs[path.destinationId] + (path.weight ?? 0);
-        pred[path.sourceId] = { parentID: path.destinationId, pathID: path.id };
-      }
-
-      //  touch both source and destination
       setTimeout(() => {
-        updateNode({ ...graph.nodes[path.sourceId], state: 'touched' });
+        updatePath({ ...graph.paths[path.id], state: 'default' });
       }, delay);
-      delay += 300;
-
-      setTimeout(() => {
-        updateNode({ ...graph.nodes[path.destinationId], state: 'touched' });
-      }, delay);
-      delay += 300;
+      delay += 200;
     }
   }
 
@@ -84,6 +82,11 @@ const bellmanford = (
       prev = connPath.parentID;
     }
   }
+  console.log('hello', costs);
+
+  Object.keys(costs).forEach((id) => {
+    console.log(graph.nodes[id].data, costs[id]);
+  });
 
   console.log('Bellmanford finished');
 };
