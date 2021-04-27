@@ -37,7 +37,7 @@ const bellmanford = (graph: IGraph, updatePath: (x: IPath) => UpdatePathAction) 
       setTimeout(() => {
         updatePath({ ...graph.paths[path.id], state: 'touched' });
       }, delay);
-      delay += 200;
+      delay += 20;
 
       if (costs[path.destinationId] > costs[path.sourceId] + (path.weight ?? 0)) {
         // visit node and update pred
@@ -48,7 +48,7 @@ const bellmanford = (graph: IGraph, updatePath: (x: IPath) => UpdatePathAction) 
       setTimeout(() => {
         updatePath({ ...graph.paths[path.id], state: 'default' });
       }, delay);
-      delay += 200;
+      delay += 20;
     }
   }
 
