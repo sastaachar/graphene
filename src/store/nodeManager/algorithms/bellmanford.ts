@@ -4,17 +4,12 @@
 //   perform more time to check for negative weighted loop
 // mark negative weighted loop as warn
 
-import { IGnode } from '../../gnode/models';
 import { IPath } from '../../path/models';
 import { IGraph } from '../models';
-import { UpdateNodeAction, UpdatePathAction } from '../models/nodeManagerActionTypes';
+import { UpdatePathAction } from '../models/nodeManagerActionTypes';
 import { Costs, Predecessor, PrevState } from './helpers';
 
-const bellmanford = (
-  graph: IGraph,
-  updateNode: (x: IGnode) => UpdateNodeAction,
-  updatePath: (x: IPath) => UpdatePathAction,
-) => {
+const bellmanford = (graph: IGraph, updatePath: (x: IPath) => UpdatePathAction) => {
   if (!graph.rootID) {
     console.log('Root is not set');
     return;

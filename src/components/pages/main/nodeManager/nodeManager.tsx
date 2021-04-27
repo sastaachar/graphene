@@ -163,7 +163,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         break;
 
       case 4:
-        bellmanford(props.nodeManager.graph, props.updateNode, props.updatePath);
+        bellmanford(props.nodeManager.graph, props.updatePath);
         break;
       default:
         break;
