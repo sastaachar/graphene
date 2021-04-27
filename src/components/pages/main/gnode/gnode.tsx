@@ -11,7 +11,8 @@ interface Props extends PropsFromRedux {
   gnode: IGnode;
   isRoot?: boolean;
   isDestination?: boolean;
-  onNodeSelect: (node: IGnode) => void;
+  onClick: (node: IGnode) => void;
+  _state?: string;
 }
 
 const Gnode: React.FC<Props> = (props: Props) => {
@@ -35,7 +36,7 @@ const Gnode: React.FC<Props> = (props: Props) => {
   };
 
   const handleOnClick = () => {
-    props.onNodeSelect(props.gnode);
+    props.onClick(props.gnode);
   };
 
   const innerStyle: CSSProperties = {};
@@ -61,4 +62,4 @@ const mapDispatchToProps = {
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(Gnode);
+export default connector(React.memo(Gnode));

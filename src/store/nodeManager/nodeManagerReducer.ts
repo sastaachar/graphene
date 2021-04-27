@@ -41,11 +41,7 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
         ...sourceOldConnections,
         { nodeID: newPath.destinationId, pathID: newPath.id },
       ];
-      const destOldConnections = newState.graph.nodes[newPath.destinationId].connections;
-      newState.graph.nodes[newPath.destinationId].connections = [
-        ...destOldConnections,
-        { nodeID: newPath.sourceId, pathID: newPath.id },
-      ];
+
       return newState;
     }
     // might regret this later

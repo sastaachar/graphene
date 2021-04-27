@@ -1,3 +1,3 @@
-import { Path } from './path';
+import Path from './path';
 
 export { Path };

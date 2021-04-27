@@ -9,9 +9,9 @@ interface Option {
 
 interface SelectSearchProps {
   defaultSlectText: string;
+  keyState: string | number;
   options: Option[];
-  defaultSelectKey?: string | number;
-  setOptionState?: Function;
+  onChange: (key: string | number) => void;
 }
 
 const SearchIcon = () => {
@@ -27,48 +27,41 @@ const SearchIcon = () => {
 
 const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => {
   const [searchText, setsearchText] = useState('');
-  const [selectedOption, setSelectedOption] = useState<Option>();
   const [showBar, setShowBar] = useState<boolean>(false);
+  // to auto focus
   const inputBar = createRef<HTMLInputElement>();
 
+  // needed for handling outside click
+  const searchBar = createRef<HTMLDivElement>();
+  // to close menu if clicked outside
   const handleOutsideClick = () => {
     if (showBar) setShowBar(false);
   };
-
-  const searchBar = createRef<HTMLDivElement>();
   useOutsideClick(searchBar, handleOutsideClick);
 
-  useEffect(() => {
-    if (props.options.length > 0 && props.defaultSelectKey != undefined) {
-      const defalutSelection = props.options.filter((e) => {
-        if (e.key === props.defaultSelectKey) return e;
-      });
-
-      if (defalutSelection.length > 0) {
-        setSelectedOption(defalutSelection[0]);
-      }
-    }
-  }, []);
+  // auto focus on input
   useEffect(() => {
     if (showBar) inputBar.current?.focus();
   }, [showBar]);
-  useEffect(() => {
-    if (props.setOptionState) props.setOptionState(selectedOption?.key);
-  }, [selectedOption]);
 
+  // used for search filter
   const searchFilter = (ele: Option) => {
     if (ele.value.toLocaleLowerCase().includes(searchText.toLocaleLowerCase())) return ele;
   };
 
+  // toggle the menu bar
   const handleToggleShow = () => {
     setShowBar(!showBar);
   };
+
+  // selected value is from parent if it fails use default
+  const selectedvalue = props.options.filter((x) => x.key === props.keyState)[0]?.value ?? props.defaultSlectText;
 
   return (
     <div className={'select-search'} ref={searchBar} onClick={handleToggleShow}>
       <div className={'select-search-selected' + (showBar ? ' two-rounded' : ' all-rounded')}>
         <div className="select-search-selected-value">
-          <span>{selectedOption?.value || props.defaultSlectText}</span>
+          <span>{selectedvalue}</span>
         </div>
         <div className={'select-search-selected-button' + (showBar ? ' down-arrow' : ' left-arrow')}></div>
       </div>
@@ -81,7 +74,7 @@ const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => 
             <input type="text" onChange={(e) => setsearchText(e.target.value)} ref={inputBar} value={searchText} />
           </div>
           {props.options.filter(searchFilter).map((option) => (
-            <div key={option.key} className="select-search-option" onClick={() => setSelectedOption(option)}>
+            <div key={option.key} className="select-search-option" onClick={() => props.onChange(option.key)}>
               <span>{option.value}</span>
             </div>
           ))}
@@ -91,7 +84,14 @@ const SelectSearch: React.FC<SelectSearchProps> = (props: SelectSearchProps) => 
   );
 };
 
-// arrow function gives error and i dont want to use the work around
+//! arrow function gives error and i dont want to use the work around
+//
+/**
+ * Detects clicks outside ref and calls cb
+ *
+ * @param ref  Clicks outside ref is detected
+ * @param cb   If click is detected cb is called
+ */
 function useOutsideClick(ref: RefObject<any>, cb: any): void {
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {

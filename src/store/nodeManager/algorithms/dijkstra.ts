@@ -3,25 +3,9 @@ import { IGnode } from '../../gnode/models';
 import { IPath } from '../../path/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction, UpdatePathAction } from '../models/nodeManagerActionTypes';
-import { touchNode, Visited, visitNode, visitPath } from './helpers';
+import { Costs, PathCost, Predecessor, PrevState, Visited } from './helpers';
 
 // there should be no negative weights
-
-interface PathCost {
-  cost: number;
-  nodeID: string;
-}
-
-interface Costs {
-  [key: string]: number;
-}
-type PrevState = {
-  pathID: string | null;
-  parentID: string | null;
-};
-interface Predecessor {
-  [key: string]: PrevState;
-}
 
 const dijkstra = (
   graph: IGraph,
@@ -64,7 +48,7 @@ const dijkstra = (
     visited[cur.nodeID] = true;
 
     setTimeout(() => {
-      updateNode(visitNode(curNode));
+      updateNode({ ...curNode, visited: true });
     }, delay);
 
     delay += 300;
@@ -78,7 +62,7 @@ const dijkstra = (
         costs[conn.nodeID] = cur.cost + pathCost;
         q.push({ cost: costs[conn.nodeID], nodeID: conn.nodeID });
         setTimeout(() => {
-          updateNode(touchNode(curNode));
+          updateNode({ ...curNode, state: 'touched' });
         }, delay);
         pred[conn.nodeID] = { parentID: cur.nodeID, pathID: conn.pathID };
       }
@@ -92,6 +76,8 @@ const dijkstra = (
 
     let prev: string | null = graph.destinationID;
 
+    const paths: string[] = [];
+
     while (prev) {
       // update path
 
@@ -102,12 +88,17 @@ const dijkstra = (
         console.log("Can't reach ", prev);
         break;
       }
-      setTimeout(() => {
-        if (connPath.pathID) updatePath(visitPath(graph.paths[connPath.pathID]));
-      }, delay);
+      if (connPath.pathID) paths.push(connPath.pathID);
 
-      delay += 300;
       prev = connPath.parentID;
+    }
+
+    for (let i = paths.length - 1; i >= 0; i--) {
+      const pathId = paths[i];
+      setTimeout(() => {
+        updatePath({ ...graph.paths[pathId], state: 'travel' });
+      }, delay);
+      delay += 300;
     }
   }
 
