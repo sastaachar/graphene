@@ -7,7 +7,7 @@
 import { IPath } from '../../path/models';
 import { IGraph } from '../models';
 import { UpdatePathAction } from '../models/nodeManagerActionTypes';
-import { Costs, Predecessor, PrevState } from './helpers';
+import { Costs, Predecessor, PrevState, Visited, visitPaths } from './helpers';
 
 const bellmanford = (graph: IGraph, updatePath: (x: IPath) => UpdatePathAction) => {
   if (!graph.rootID) {
@@ -55,13 +55,12 @@ const bellmanford = (graph: IGraph, updatePath: (x: IPath) => UpdatePathAction) 
   if (graph.destinationID) {
     // destination id is set so we can find path
 
-    // check if no path exists
-
     let prev: string | null = graph.destinationID;
 
+    const visited: Visited = {};
+    const paths: string[] = [];
+    let negativeCycle = false;
     while (prev) {
-      // update path
-
       const connPath: PrevState = pred[prev];
 
       if (!connPath) {
@@ -69,21 +68,70 @@ const bellmanford = (graph: IGraph, updatePath: (x: IPath) => UpdatePathAction) 
         console.log("Can't reach ", prev);
         break;
       }
-      setTimeout(() => {
-        if (connPath.pathID) updatePath({ ...graph.paths[connPath.pathID], state: 'travel' });
-      }, delay);
 
-      delay += 300;
+      if (visited[prev]) {
+        // we have a negative cycle
+        markCycle(prev, pred, graph, updatePath, delay);
+        negativeCycle = true;
+        break;
+      }
+
+      visited[prev] = true;
+
+      if (connPath.pathID) paths.push(connPath.pathID);
+
       prev = connPath.parentID;
     }
+
+    if (!negativeCycle) {
+      visitPaths(paths, graph, updatePath, delay);
+    }
   }
-  console.log('hello', costs);
+  console.log('Costs : ', costs);
 
   Object.keys(costs).forEach((id) => {
     console.log(graph.nodes[id].data, costs[id]);
   });
 
   console.log('Bellmanford finished');
+};
+
+const markCycle = (
+  rootId: string,
+  pred: Predecessor,
+  graph: IGraph,
+  updatePath: (x: IPath) => UpdatePathAction,
+  delay = 0,
+) => {
+  // root -> pred[rid] -> pred[ pred[rid].pid ]
+
+  let root = rootId;
+  const loopPath = [];
+
+  while (true) {
+    const cur = pred[root];
+    loopPath.push(cur.pathID);
+    if (!cur.parentID) break;
+    root = cur.parentID;
+    if (root === rootId) break;
+  }
+  console.log('Negative weighted cycle detected');
+
+  loopPath.forEach((pathId) => {
+    if (!pathId) return;
+
+    console.log(
+      graph.nodes[graph.paths[pathId].sourceId].data,
+      graph.nodes[graph.paths[pathId].destinationId].data,
+      'negative cycle',
+    );
+
+    setTimeout(() => {
+      updatePath({ ...graph.paths[pathId], state: 'warn' });
+    }, delay);
+
+    delay += 300;
+  });
 };
 
 export default bellmanford;
