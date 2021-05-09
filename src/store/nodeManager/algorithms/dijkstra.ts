@@ -3,7 +3,7 @@ import { IGnode } from '../../gnode/models';
 import { IPath } from '../../path/models';
 import { IGraph } from '../models';
 import { UpdateNodeAction, UpdatePathAction } from '../models/nodeManagerActionTypes';
-import { Costs, PathCost, Predecessor, PrevState, Visited } from './helpers';
+import { Costs, PathCost, Predecessor, PrevState, Visited, visitPaths } from './helpers';
 
 // there should be no negative weights
 
@@ -93,13 +93,7 @@ const dijkstra = (
       prev = connPath.parentID;
     }
 
-    for (let i = paths.length - 1; i >= 0; i--) {
-      const pathId = paths[i];
-      setTimeout(() => {
-        updatePath({ ...graph.paths[pathId], state: 'travel' });
-      }, delay);
-      delay += 300;
-    }
+    visitPaths(paths, graph, updatePath, delay);
   }
 
   Object.keys(costs).forEach((id) => {

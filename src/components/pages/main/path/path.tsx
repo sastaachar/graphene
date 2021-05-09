@@ -17,6 +17,8 @@ const Path: React.FC<Props> = (props) => {
       ? 'var(--green)'
       : props.path.state === 'touched'
       ? 'var(--yello)'
+      : props.path.state === 'warn'
+      ? 'var(--red)'
       : 'var(--primary-darker)';
   const style: CSSProperties = { stroke: pathColor };
 
@@ -92,8 +94,6 @@ const Path: React.FC<Props> = (props) => {
   } else {
     console.log('invalid type');
   }
-
-  console.log('path');
 
   return (
     <div className="path-wrapper">
