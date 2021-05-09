@@ -34,9 +34,9 @@ export const updateNode = (updatedNode: IGnode): UpdateNodeAction => ({
   payload: { updatedNode },
 });
 
-export const setRoot = (nodeID: string | undefined): SetRootAction => ({
+export const setRoot = (nodeId: string | undefined): SetRootAction => ({
   type: SET_ROOT,
-  payload: { nodeID },
+  payload: { nodeId },
 });
 
 export const unvisitAll = (): UnvisitAllAction => ({
@@ -48,7 +48,7 @@ export const updatePath = (updatedPath: IPath): UpdatePathAction => ({
   payload: { updatedPath },
 });
 
-export const setDestination = (nodeID: string | undefined): SetDestinationAction => ({
+export const setDestination = (nodeId: string | undefined): SetDestinationAction => ({
   type: SET_DESTINATION,
-  payload: { nodeID },
+  payload: { nodeId },
 });

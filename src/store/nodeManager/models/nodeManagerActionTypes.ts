@@ -10,7 +10,7 @@ export interface AddGnodeAction {
 export const REMOVE_NODE = 'REMOVE_NODE';
 export interface RemoveGnodeAction {
   type: typeof REMOVE_NODE;
-  payload: { nodeID: string };
+  payload: { nodeId: string };
 }
 export const UPDATE_NODE = 'UPDATE_NODE';
 
@@ -28,13 +28,13 @@ export interface AddPathAction {
 export const REMOVE_PATH = 'REMOVE_PATH';
 export interface RemovePathAction {
   type: typeof REMOVE_PATH;
-  payload: { pathID: string };
+  payload: { pathId: string };
 }
 
 export const SET_ROOT = 'SET_ROOT';
 export interface SetRootAction {
   type: typeof SET_ROOT;
-  payload: { nodeID: string | undefined };
+  payload: { nodeId: string | undefined };
 }
 
 export const UNVISIT_ALL = 'UNVISIT_ALL';
@@ -53,7 +53,7 @@ export const SET_DESTINATION = 'SET_DESTINATION';
 
 export interface SetDestinationAction {
   type: typeof SET_DESTINATION;
-  payload: { nodeID: string | undefined };
+  payload: { nodeId: string | undefined };
 }
 
 export type NodeMangerAction =

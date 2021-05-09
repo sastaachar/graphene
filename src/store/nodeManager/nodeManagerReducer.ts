@@ -66,9 +66,9 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
       return newState;
     }
     case SET_ROOT: {
-      const { nodeID } = action.payload;
+      const { nodeId } = action.payload;
 
-      newState.graph.rootID = nodeID;
+      newState.graph.rootID = nodeId;
       return newState;
     }
     case UNVISIT_ALL: {
@@ -82,9 +82,9 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
       return newState;
     }
     case SET_DESTINATION: {
-      const { nodeID } = action.payload;
+      const { nodeId } = action.payload;
 
-      newState.graph.destinationID = nodeID;
+      newState.graph.destinationID = nodeId;
       return newState;
     }
     default:
