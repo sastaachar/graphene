@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/graphene/static/css/main.6f8899ee.chunk.css",
-    "main.js": "/graphene/static/js/main.4c4ffaf1.chunk.js",
-    "main.js.map": "/graphene/static/js/main.4c4ffaf1.chunk.js.map",
+    "main.css": "/graphene/static/css/main.9b06fe46.chunk.css",
+    "main.js": "/graphene/static/js/main.5f9e5f0a.chunk.js",
+    "main.js.map": "/graphene/static/js/main.5f9e5f0a.chunk.js.map",
     "runtime-main.js": "/graphene/static/js/runtime-main.97088004.js",
     "runtime-main.js.map": "/graphene/static/js/runtime-main.97088004.js.map",
     "static/js/2.23ec5c54.chunk.js": "/graphene/static/js/2.23ec5c54.chunk.js",
     "static/js/2.23ec5c54.chunk.js.map": "/graphene/static/js/2.23ec5c54.chunk.js.map",
     "index.html": "/graphene/index.html",
-    "static/css/main.6f8899ee.chunk.css.map": "/graphene/static/css/main.6f8899ee.chunk.css.map",
+    "static/css/main.9b06fe46.chunk.css.map": "/graphene/static/css/main.9b06fe46.chunk.css.map",
     "static/js/2.23ec5c54.chunk.js.LICENSE.txt": "/graphene/static/js/2.23ec5c54.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.97088004.js",
     "static/js/2.23ec5c54.chunk.js",
-    "static/css/main.6f8899ee.chunk.css",
-    "static/js/main.4c4ffaf1.chunk.js"
+    "static/css/main.9b06fe46.chunk.css",
+    "static/js/main.5f9e5f0a.chunk.js"
   ]
 }
