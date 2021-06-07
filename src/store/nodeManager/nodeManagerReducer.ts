@@ -5,6 +5,8 @@ import { INodeManager } from './models';
 import {
   ADD_NODE,
   ADD_PATH,
+  DELETE_NODE,
+  DELETE_PATH,
   NodeMangerAction,
   SET_DESTINATION,
   SET_ROOT,
@@ -66,9 +68,9 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
       return newState;
     }
     case SET_ROOT: {
-      const { nodeID } = action.payload;
+      const { nodeId } = action.payload;
 
-      newState.graph.rootID = nodeID;
+      newState.graph.rootID = nodeId;
       return newState;
     }
     case UNVISIT_ALL: {
@@ -82,11 +84,40 @@ export const NodeManagerReducer: Reducer<INodeManager, NodeMangerAction> = (
       return newState;
     }
     case SET_DESTINATION: {
-      const { nodeID } = action.payload;
+      const { nodeId } = action.payload;
 
-      newState.graph.destinationID = nodeID;
+      newState.graph.destinationID = nodeId;
       return newState;
     }
+    case DELETE_NODE: {
+      const { nodeId } = action.payload;
+
+      const node = newState.graph.nodes[nodeId];
+
+      node.connections.forEach((conn) => {
+        const pathId = conn.pathID;
+        delete newState.graph.paths[pathId];
+      });
+
+      delete newState.graph.nodes[nodeId];
+
+      return newState;
+    }
+    case DELETE_PATH: {
+      const { pathId } = action.payload;
+
+      const path = newState.graph.paths[pathId];
+
+      newState.graph.nodes[path.sourceId].connections = newState.graph.nodes[path.sourceId].connections.filter(
+        (conn) => {
+          conn.nodeID !== path.destinationId;
+        },
+      );
+
+      delete newState.graph.paths[pathId];
+      return newState;
+    }
+
     default:
       return state;
   }

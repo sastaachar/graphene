@@ -1,5 +1,6 @@
 import React, { CSSProperties } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
+
 import { IPath } from '../../../../store/path/models';
 import { AppState } from '../../../../store/rootStore';
 import { Position } from '../../../../store/sharedModels';
@@ -8,6 +9,7 @@ import './path.scss';
 
 interface Props extends PropsFromRedux {
   path: IPath;
+  onClick: (node: IPath) => void;
   _state?: string;
 }
 
@@ -95,6 +97,10 @@ const Path: React.FC<Props> = (props) => {
     console.log('invalid type');
   }
 
+  const handleOnClick = () => {
+    props.onClick(props.path);
+  };
+
   return (
     <div className="path-wrapper">
       <svg className="path" width="100%" height="100%">
@@ -107,7 +113,7 @@ const Path: React.FC<Props> = (props) => {
             refY="3.5"
             orient="auto"
           >
-            <polygon points="0 0, 10 3.5, 0 7" fill={pathColor} />
+            <polygon points="0 0, 10 3.5, 0 7" fill={pathColor} onClick={handleOnClick} />
           </marker>
         </defs>
         <path
@@ -116,20 +122,23 @@ const Path: React.FC<Props> = (props) => {
           style={style}
           fill="none"
           markerEnd={`url(#${props.path.id}-arrowhead)`}
+          onClick={handleOnClick}
         ></path>
       </svg>
 
-      <span
-        style={{
-          position: 'absolute',
-          left: textPos.x,
-          top: textPos.y,
-          color: 'var(--yellow)',
-          fontSize: '20px',
-        }}
-      >
-        {props.path.weight}
-      </span>
+      {props.path.weight && (
+        <span
+          style={{
+            left: textPos.x,
+            top: textPos.y,
+            color: 'var(--yellow)',
+          }}
+          className="path-text"
+          onClick={handleOnClick}
+        >
+          {props.path.weight}
+        </span>
+      )}
     </div>
   );
 };
