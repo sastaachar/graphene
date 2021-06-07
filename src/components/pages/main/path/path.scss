@@ -1,3 +1,14 @@
 .path {
   stroke-width: 2.5;
+
+  &-text {
+    position: absolute;
+    font-size: 20px;
+    //  this will help for onclick
+    z-index: 1;
+
+    &:hover {
+      color: var(--red) !important;
+    }
+  }
 }

@@ -2,7 +2,7 @@ import React, { MouseEvent, useCallback, useEffect, useRef, useState } from 'rea
 import { connect, ConnectedProps } from 'react-redux';
 
 import { createGnode, IGnode } from '../../../../store/gnode/models';
-import { PathType } from '../../../../store/path/models';
+import { IPath, PathType } from '../../../../store/path/models';
 import { bfs, dfs, dijkstra } from '../../../../store/nodeManager/algorithms';
 import bellmanford from '../../../../store/nodeManager/algorithms/bellmanford';
 import groupGraph from '../../../../store/nodeManager/algorithms/graphGrouping';
@@ -14,6 +14,8 @@ import {
   unvisitAll,
   updateNode,
   updatePath,
+  deleteNode,
+  deletePath,
 } from '../../../../store/nodeManager/nodeManagerActions';
 import { createPath } from '../../../../store/path/models';
 import { AppState } from '../../../../store/rootStore';
@@ -41,16 +43,24 @@ const NodeManager: React.FC<Props> = (props: Props) => {
   const [algorithmState, setAlgorithmState] = useState(0);
 
   const [sourceNode, setSourceNode] = useState<IGnode | null>(null);
+
   const [clickedNode, setClickedNode] = useState<IGnode | null>(null);
+  const [clickedPath, setClickedPath] = useState<IPath | null>(null);
 
   const [autoIncrement, setAutoIncrement] = useState(false);
 
   useEffect(() => {
     if (clickedNode) handleNodeClickChange(clickedNode as IGnode);
   }, [clickedNode]);
+  useEffect(() => {
+    if (clickedPath) handlePathClickChange(clickedPath as IPath);
+  }, [clickedPath]);
 
-  const handleNodeClick = useCallback((node) => {
+  const handleNodeClick = useCallback((node: IGnode) => {
     setClickedNode(node);
+  }, []);
+  const handlePathClick = useCallback((path: IPath) => {
+    setClickedPath(path);
   }, []);
 
   // create node
@@ -138,10 +148,29 @@ const NodeManager: React.FC<Props> = (props: Props) => {
         else props.setDestination(undefined);
         break;
 
+      case 4:
+        console.log(node.data, 'node deleted');
+        props.deleteNode(node.id);
+        break;
+
       default:
         break;
     }
     setClickedNode(null);
+  };
+
+  const handlePathClickChange = (path: IPath) => {
+    // node is selected : do stuff to handle that
+    switch (modeState) {
+      case 4:
+        console.log(path, 'node deleted');
+        props.deletePath(path.id);
+        break;
+
+      default:
+        break;
+    }
+    setClickedPath(null);
   };
 
   const handleAlgoStart = () => {
@@ -174,6 +203,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
     { key: 1, value: 'Create Path' },
     { key: 2, value: 'Set Root' },
     { key: 3, value: 'Set Destination' },
+    { key: 4, value: 'Delete stuff' },
   ];
   const optionsAlgorithm = [
     { key: 0, value: 'BFS' },
@@ -240,7 +270,7 @@ const NodeManager: React.FC<Props> = (props: Props) => {
           />
         ))}
         {Object.values(props.nodeManager.graph.paths).map((path) => (
-          <Path key={path.id} path={path} _state={path.state} />
+          <Path key={path.id} path={path} _state={path.state} onClick={handlePathClick} />
         ))}
       </div>
     </div>
@@ -258,6 +288,8 @@ const mapDispatchToProps = {
   unvisitAll,
   updatePath,
   setDestination,
+  deleteNode,
+  deletePath,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

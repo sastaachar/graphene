@@ -56,6 +56,18 @@ export interface SetDestinationAction {
   payload: { nodeId: string | undefined };
 }
 
+export const DELETE_NODE = 'DELETE_NODE';
+export interface DeleteNodeAction {
+  type: typeof DELETE_NODE;
+  payload: { nodeId: string };
+}
+
+export const DELETE_PATH = 'DELETE_PATH';
+export interface DeletePathAction {
+  type: typeof DELETE_PATH;
+  payload: { pathId: string };
+}
+
 export type NodeMangerAction =
   | AddGnodeAction
   | RemoveGnodeAction
@@ -65,4 +77,6 @@ export type NodeMangerAction =
   | SetRootAction
   | UnvisitAllAction
   | UpdatePathAction
-  | SetDestinationAction;
+  | SetDestinationAction
+  | DeleteNodeAction
+  | DeletePathAction;

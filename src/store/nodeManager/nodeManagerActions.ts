@@ -17,6 +17,10 @@ import {
   UPDATE_PATH,
   SetDestinationAction,
   SET_DESTINATION,
+  DeleteNodeAction,
+  DELETE_NODE,
+  DeletePathAction,
+  DELETE_PATH,
 } from './models/nodeManagerActionTypes';
 
 export const addGnode = (gnode: IGnode): AddGnodeAction => ({
@@ -51,4 +55,14 @@ export const updatePath = (updatedPath: IPath): UpdatePathAction => ({
 export const setDestination = (nodeId: string | undefined): SetDestinationAction => ({
   type: SET_DESTINATION,
   payload: { nodeId },
+});
+
+export const deleteNode = (nodeId: string): DeleteNodeAction => ({
+  type: DELETE_NODE,
+  payload: { nodeId },
+});
+
+export const deletePath = (pathId: string): DeletePathAction => ({
+  type: DELETE_PATH,
+  payload: { pathId },
 });
